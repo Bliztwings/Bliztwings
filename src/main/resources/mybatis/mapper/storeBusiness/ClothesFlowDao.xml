@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.ClothesFlowDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="ClothesFlow">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="clothes_id" jdbcType="VARCHAR" property="clothesId" />
+		 <result column="opt_user_id" jdbcType="VARCHAR" property="optUserId" />
+		 <result column="opt_user_name" jdbcType="VARCHAR" property="optUserName" />
+		 <result column="opt_date" jdbcType="TIMESTAMP" property="optDate" />
+		 <result column="optDateStr" jdbcType="VARCHAR" property="optDateStr" />
+		 <result column="clothes_status" jdbcType="VARCHAR" property="clothesStatus" />
+		 
+		 
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+			id,
+			clothes_id,
+			opt_user_id,
+			opt_user_name,
+			opt_date,
+			clothes_status,
+			DATE_FORMAT(opt_date,'%Y-%c-%d %H:%i:%s') as optDateStr
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_clothes_flow 
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from store_clothes_flow
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+	insert into store_clothes_flow
+	(id,clothes_id,opt_user_id,opt_user_name,opt_date,clothes_status,order_id)
+	values
+	(#{id},#{clothesId},#{optUserId},#{optUserName},#{optDate},#{clothesStatus},#{orderId})
+</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="ClothesFlow">
+		 update store_clothes_flow
+ 		 <set> 
+			<if test="optUserName != null and optUserName != ''">
+				 opt_user_name = #{optUserName},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="ClothesFlow" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+			from store_clothes_flow
+		 	where 1=1 
+			<if test="clothesId != null and clothesId != ''">
+				 and clothes_id = #{clothesId}
+			</if>
+			
+			<if test="orderId != null and orderId != ''">
+				 and order_id = #{orderId}
+			</if>
+            <if test="clothesStatus != null and clothesStatus != ''">
+                 and clothes_status = #{clothesStatus}
+            </if>
+			
+			order by opt_date asc
+	</select>
+
+</mapper>

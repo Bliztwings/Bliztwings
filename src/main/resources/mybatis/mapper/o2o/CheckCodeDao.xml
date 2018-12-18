@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.CheckCodeDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="CheckCode">
+		 <id column="telephone" jdbcType="VARCHAR" property="telephone" />
+		 <result column="app_id" jdbcType="VARCHAR" property="appId" />
+		 <result column="code" jdbcType="VARCHAR" property="code" />
+		 <result column="status" jdbcType="VARCHAR" property="status" />
+		 <result column="type" jdbcType="VARCHAR" property="type" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 telephone, app_id, code, status, type, create_time
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from check_code
+		 where telephone = #{telephone}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from check_code
+		 where telephone = #{telephone}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="CheckCode">
+		 insert into check_code
+ 		(telephone,app_id,code,status,type,create_time) 
+		 values 
+ 		(#{telephone},#{appId},#{code},#{status},#{type},#{createTime}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="CheckCode">
+		 update check_code
+ 		 <set> 
+			<if test="appId != null and appId != ''">
+				 app_id = #{appId},
+			</if>
+			<if test="code != null and code != ''">
+				 code = #{code},
+			</if>
+			<if test="status != null and status != ''">
+				 status = #{status},
+			</if>
+			<if test="type != null and type != ''">
+				 type = #{type},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				 create_time = #{createTime},
+			</if>
+ 		 </set>
+		 where telephone = #{telephone}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="CheckCode" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from check_code
+		 where status='0'  
+		 	<if test="telephone != null and telephone != ''">
+				 and telephone = #{telephone} 
+			</if>
+			<if test="appId != null and appId != ''">
+				 and app_id = #{appId}
+			</if>
+			<if test="code != null and code != ''">
+				 and code = #{code}
+			</if>
+			<if test="type != null and type != ''">
+				 and type = #{type}
+			</if>
+	</select>
+	
+	
+	<update id="invalidCode" parameterType="CheckCode">
+		 update check_code set status='1' where app_id = #{appId} and status = '0' and type = #{type} and telephone = #{telephone}
+	</update>
+	
+</mapper>

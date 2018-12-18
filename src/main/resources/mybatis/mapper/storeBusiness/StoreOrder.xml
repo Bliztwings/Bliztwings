@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.EwashingStoreOrderDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="StoreOrder">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+		 <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+		 <result column="card_number" jdbcType="VARCHAR" property="cardNumber" />
+		 <result column="member_id" jdbcType="VARCHAR" property="memberId" />
+		 <result column="member_name" jdbcType="VARCHAR" property="memberName" />
+		 <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+		 <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+		 <result column="order_status" jdbcType="VARCHAR" property="orderStatus" />
+		 <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+		 <result column="order_date" jdbcType="TIMESTAMP" property="orderDate" />
+		 <result column="pay_status" jdbcType="VARCHAR" property="payStatus" />
+		 <result column="pay_gateway" jdbcType="VARCHAR" property="payGateWay" />
+		 <result column="pay_date" jdbcType="VARCHAR" property="payDate" />
+		 <result column="clothes_count" jdbcType="VARCHAR" property="clothesCount" />
+		 <result column="receivable_amount" jdbcType="DECIMAL" property="receivableAmount" />
+		 <result column="freight" jdbcType="DECIMAL" property="freight" />
+		 <result column="clothes_amount" jdbcType="DECIMAL" property="clothesAmount" />
+		 <result column="paid_amount" jdbcType="DECIMAL" property="paidAmount" />
+		 <result column="order_date" jdbcType="TIMESTAMP" property="orderDate" />
+		 <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		 <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		 <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+		 <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+		 <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+		 <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+		 
+		 <result column="order_address" jdbcType="VARCHAR" property="orderAddress" />
+		 <result column="place_order_date" jdbcType="TIMESTAMP" property="placeOrderDate" />
+ 		 <result column="place_order_date_area" jdbcType="VARCHAR" property="placeOrderDateArea" />
+		 <result column="leave_message" jdbcType="VARCHAR" property="leaveMessage" />
+		 <result column="service_item" jdbcType="VARCHAR" property="serviceItem" />
+		 <result column="distribute_status" jdbcType="VARCHAR" property="distributeStatus" />
+		 <result column="send_distribute_status" jdbcType="VARCHAR" property="sendDistributeStatus" />
+		 
+		 <result column="seal_number" jdbcType="VARCHAR" property="sealNumber" />
+		 <result column="freight" jdbcType="DECIMAL" property="freight" />
+		 <result column="clothes_amount" jdbcType="DECIMAL" property="clothesAmount" />
+		 <result column="open_id"  jdbcType="VARCHAR" property="openId" />
+		 <result column="valuation"  jdbcType="VARCHAR" property="valuation" />
+		 <result column="app_id"  jdbcType="VARCHAR" property="appId" />
+		 <result column="print_status"  jdbcType="VARCHAR" property="printStatus" />
+
+	</resultMap>
+	
+	
+	<!--O2O 通用ResultMap  -->
+	<resultMap id="BaseO2OResultMap" type="StoreOrder">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+		 <result column="card_number" jdbcType="VARCHAR" property="cardNumber" />
+		 <result column="member_id" jdbcType="VARCHAR" property="memberId" />
+		 <result column="member_name" jdbcType="VARCHAR" property="memberName" />
+		 <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+		 <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+		 <result column="order_status" jdbcType="VARCHAR" property="orderStatus" />
+		 <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+		 <result column="order_date" jdbcType="TIMESTAMP" property="orderDate" />
+		 <result column="pay_status" jdbcType="VARCHAR" property="payStatus" />
+		 <result column="pay_gateway" jdbcType="VARCHAR" property="payGateWay" />
+		 <result column="pay_date" jdbcType="VARCHAR" property="payDate" />
+		 <result column="clothes_count" jdbcType="VARCHAR" property="clothesCount" />
+		 <result column="receivable_amount" jdbcType="DECIMAL" property="receivableAmount" />
+		 <result column="paid_amount" jdbcType="DECIMAL" property="paidAmount" />
+		 <result column="order_date" jdbcType="TIMESTAMP" property="orderDate" />
+		 <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		 <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		 <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+		 <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+		 <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+		 <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+		 
+		 <result column="order_address" jdbcType="VARCHAR" property="orderAddress" />
+		 <result column="place_order_date" jdbcType="TIMESTAMP" property="placeOrderDate" />
+ 		 <result column="place_order_date_area" jdbcType="VARCHAR" property="placeOrderDateArea" />
+		 <result column="leave_message" jdbcType="VARCHAR" property="leaveMessage" />
+		 <result column="service_item" jdbcType="VARCHAR" property="serviceItem" />
+		 <result column="distribute_status" jdbcType="VARCHAR" property="distributeStatus" />
+		 <result column="send_distribute_status" jdbcType="VARCHAR" property="sendDistributeStatus" />
+		 <result column="seal_number" jdbcType="VARCHAR" property="sealNumber" />
+		 <result column="freight" jdbcType="DECIMAL" property="freight" />
+		 <result column="clothes_amount" jdbcType="DECIMAL" property="clothesAmount" />
+		 <result column="task_status"  jdbcType="VARCHAR" property="taskStatus" />
+		 <result column="open_id"  jdbcType="VARCHAR" property="openId" />
+		 <result column="valuation"  jdbcType="VARCHAR" property="valuation" />
+		 <result column="accept_status"  jdbcType="VARCHAR" property="acceptStatus" />
+		 <result column="locations"  jdbcType="VARCHAR" property="locationString" />
+		 <result column="longitude"  jdbcType="VARCHAR" property="longitude" />
+		 <result column="latitude"  jdbcType="VARCHAR" property="latitude" />
+		 <result column="print_status"  jdbcType="VARCHAR" property="printStatus" />
+		 <result column="app_id"  jdbcType="VARCHAR" property="appId" />
+		 
+		 
+	</resultMap>
+	
+	<!-- o2o 通用查询结果 -->
+	<sql id="Base_o2o_Column_List">
+		 o.id ,
+		 o.store_id,
+		 o.order_code,
+		 o.card_number,
+		 o.member_id,
+		 o.member_name,
+		 o.mobile_phone,
+		 o.telephone,
+		 o.order_status,
+		 o.order_type,
+		 o.order_date,
+		 o.pay_gateway,
+		 o.pay_status,
+		 o.pay_date,
+		 o.clothes_count,
+		 o.receivable_amount,
+		 o.paid_amount,
+		 o.create_date,
+		 o.create_user_name,
+		 o.update_date,
+		 o.update_user_name,
+		 o.create_user_id,
+		 o.update_user_id,
+		 o.distribute_status,
+		 o.order_address,
+		 o.place_order_date,
+		 o.place_order_date_area,
+		 o.leave_message,
+		 o.service_item,
+		 o.distribute_status,
+		 o.send_distribute_status,
+		 o.seal_number,
+		 o.freight,
+		 o.clothes_amount,
+		 o.open_id,
+		 o.app_id,
+		 o.valuation,
+		 o.print_status
+	</sql>
+	
+	<!-- o2o send receive order Base_o2o_send_receive_Column_List -->
+	
+	<sql id="Base_o2o_send_receive_Column_List">
+		 o.id ,
+		 o.store_id,
+		 o.order_code,
+		 o.card_number,
+		 o.member_id,
+		 o.member_name,
+		 o.mobile_phone,
+		 o.telephone,
+		 o.order_status,
+		 o.order_type,
+		 o.order_date,
+		 o.pay_gateway,
+		 o.pay_status,
+		 o.pay_date,
+		 o.clothes_count,
+		 o.receivable_amount,
+		 o.paid_amount,
+		 o.create_date,
+		 o.create_user_name,
+		 o.update_date,
+		 o.update_user_name,
+		 o.create_user_id,
+		 o.update_user_id,
+		 o.distribute_status,
+		 o.send_distribute_status,
+		 o.order_address,
+		 r.task_status,
+		 o.place_order_date,
+		 o.place_order_date_area,
+		 o.leave_message,
+		 o.service_item,
+		 o.seal_number,
+		 o.freight,
+		 o.clothes_amount,
+		 o.open_id,
+		 o.valuation,
+		 r.accept_status,
+		 ASTEXT(o.locations) as locationString,
+		 o.print_status,
+		 o.app_id
+	</sql>
+	
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 o.id ,
+		 o.store_id,
+		 o.order_code,
+		 o.card_number,
+		 o.member_id,
+		 o.member_name,
+		 o.mobile_phone,
+		 o.telephone,
+		 o.order_status,
+		 o.order_type,
+		 o.order_date,
+		 o.pay_gateway,
+		 o.pay_status,
+		 o.pay_date,
+		 o.clothes_count,
+		 o.receivable_amount,
+		 o.paid_amount,
+		 o.create_date,
+		 o.create_user_name,
+		 o.update_date,
+		 o.update_user_name,
+		 o.create_user_id,
+		 o.update_user_id,
+		 s.store_name,
+		 
+		 o.valuation,
+		 o.send_distribute_status,
+		 o.order_address,
+		 o.place_order_date,
+		 o.place_order_date_area,
+		 o.leave_message,
+		 o.service_item,
+		 o.distribute_status,
+		 o.seal_number,
+		 o.freight,
+		 o.clothes_amount,
+		 o.open_id,
+		 o.app_id,
+		 o.print_status
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_order o 
+		 left join store s on o.store_id = s.id
+		 where o.id = #{id}
+	</select>
+	
+	<select id="getStoreOrderByCode" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_order o
+		 left join store s on o.store_id = s.id
+		 where o.order_code = #{orderCode}
+	</select>
+	
+	<select id="getOrderBySealNumber" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_order o
+		 left join store s on o.store_id = s.id
+		 where o.seal_number = #{sealNumber}
+	</select>
+	
+	
+	<select id="getStoreOrderByQueryKey" parameterType="StoreClothes" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_order o 
+		 left join store s on o.store_id = s.id
+		 where 1=1
+		 <if test="queryKey != null and queryKey != ''">
+				 and o.member_name = #{queryKey} || o.mobile_phone = #{queryKey}
+		 </if>
+		 
+		 <if test="storeId != null and storeId != ''">
+				 and o.store_id =#{storeId}
+		 </if>
+			
+		order by o.create_date desc
+	</select>
+	
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from store_order
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+		 insert into store_order
+ 		(id ,store_id,store_name,order_code,locations,card_number,member_id,member_name,mobile_phone,telephone,order_status,order_type,order_date,pay_status,clothes_count,receivable_amount,paid_amount,create_date,create_user_name,create_user_id) 
+		 values 
+ 		(#{id},#{storeId},#{storeName},#{orderCode},GeomFromText(#{locationString,jdbcType=OTHER}),#{cardNumber},#{memberId},#{memberName},#{mobilePhone},#{telephone},#{orderStatus},#{orderType},#{orderDate},#{payStatus},#{clothesCount},#{receivableAmount},#{paidAmount},#{createDate},#{createUserName},#{createUserId}) 
+	</insert>
+	
+	<insert id="placeOrder" parameterType="map">
+	
+	INSERT INTO store_order 
+	(
+		id,
+		store_id,
+		store_name,
+		order_code,
+		card_number,
+		member_id,
+		member_name,
+		mobile_phone,
+		telephone,
+		order_status,
+		order_type,
+		order_date,
+		pay_status,
+		clothes_count,
+		receivable_amount,
+		paid_amount,
+		create_date,
+		create_user_name,
+		create_user_id,
+		order_address,
+		place_order_date,
+		place_order_date_area,
+		leave_message,
+		service_item,
+		distribute_status,
+		send_distribute_status,
+		locations,
+		longitude,
+		latitude,
+		seal_number,
+		freight,
+		clothes_amount,
+		open_id,
+		app_id,
+		print_status
+		
+	)
+	VALUES
+	(
+		#{id},
+		#{storeId},
+		#{storeName},
+		#{orderCode},
+		#{cardNumber},
+		#{memberId},
+		#{memberName},
+		#{mobilePhone},
+		#{telephone},
+		#{orderStatus},
+		#{orderType},
+		#{orderDate},
+		#{payStatus},
+		#{clothesCount},
+		#{receivableAmount},
+		#{paidAmount},
+		#{createDate},
+		#{createUserName},
+		#{createUserId},
+		#{orderAddress},
+		#{placeOrderDate},
+		#{placeOrderDateArea},
+		#{leaveMessage},
+		#{serviceItem},
+		#{distributeStatus},
+		#{sendDistributeStatus},
+		GeomFromText(#{locationString,jdbcType=OTHER}),
+		#{longitude},
+		#{latitude},
+		#{sealNumber},
+		#{freight},
+		#{clothesAmount},
+		#{openId},
+		#{appId},
+		#{printStatus}
+	)
+</insert>
+	
+
+	<!-- 修改  -->
+	<update id="update" parameterType="StoreOrder">
+		 update store_order
+ 		 <set> 
+ 		 	
+ 		 	<if test="orderStatus != null and orderStatus != ''">
+				 order_status = #{orderStatus},
+			</if>
+			
+			<if test="payDate != null and payDate != ''">
+				 pay_date = #{payDate},
+			</if>
+			
+			<if test="payStatus != null and payStatus != ''">
+				 pay_status = #{payStatus},
+			</if>
+			
+			<if test="payGateWay != null and payGateWay != ''">
+				 pay_gateway = #{payGateWay},
+			</if>
+			
+			<if test="paidAmount != null and paidAmount != ''">
+				 paid_amount = #{paidAmount},
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				 update_date = #{updateDate},
+			</if>
+			
+			<if test="updateUserName != null and updateUserName != ''">
+				 update_user_name = #{updateUserName},
+			</if>
+			
+			<if test="updateUserId != null and updateUserId != ''">
+				 update_user_id = #{updateUserId},
+			</if>
+			
+			<if test="sealNumber != null and sealNumber != ''">
+				 seal_number = #{sealNumber},
+			</if>
+			
+			<if test="distributeStatus != null and distributeStatus != ''">
+				 distribute_status = #{distributeStatus},
+			</if>
+			
+			<if test="sendDistributeStatus != null and sendDistributeStatus != ''">
+				 send_distribute_status = #{sendDistributeStatus},
+			</if>
+			
+			<if test="receivableAmount != null and receivableAmount != '' or receivableAmount==0.0">
+				 receivable_amount = #{receivableAmount},
+			</if>
+			
+			<if test="clothesAmount != null and clothesAmount != '' or clothesAmount">
+				 clothes_amount = #{clothesAmount},
+			</if>
+			
+			<if test="freight != null and freight != '' or freight">
+				 freight = #{freight},
+			</if>
+			
+			<if test="valuation != null and valuation != '' ">
+				 valuation = #{valuation},
+			</if>
+			
+			<if test="distributeStatus != null and distributeStatus != ''">
+				 distribute_status = #{distributeStatus},
+			</if>
+			
+			<if test="placeOrderDate != null and placeOrderDate != ''">
+				 place_order_date = #{placeOrderDate},
+			</if>
+			
+			<if test="placeOrderDateArea != null and placeOrderDateArea != ''">
+				 place_order_date_area = #{placeOrderDateArea},
+			</if>
+			
+ 		 </set>
+		 where id = #{id} and order_status <![CDATA[ <> ]]> '30'
+	</update>
+	
+	<update id="updateStoreOrder" parameterType="StoreOrder">
+		 update store_order
+ 		 <set> 
+ 		 	
+ 		 	<if test="orderStatus != null and orderStatus != ''">
+				 order_status = #{orderStatus},
+			</if>
+			
+			<if test="clothesCount != null and clothesCount != '' ">
+				 clothes_count = #{clothesCount},
+			</if>
+			
+			<if test="receivableAmount != null and receivableAmount != '' or receivableAmount==0.0">
+				 receivable_amount = #{receivableAmount},
+			</if>
+			
+			<if test="paidAmount != null and paidAmount != ''">
+				 paid_amount = #{paidAmount},
+			</if>
+			
+			<if test="orderStatus != null and orderStatus != ''">
+				 order_status = #{orderStatus},
+			</if>
+			
+			<if test="payStatus != null and payStatus != ''">
+				 pay_status = #{payStatus},
+			</if>
+			
+			<if test="distributeStatus != null and distributeStatus != ''">
+				 distribute_status = #{distributeStatus},
+			</if>
+			
+			
+ 		 </set>
+		 where order_code = #{orderCode}
+	</update>
+	
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="StoreOrder" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_order o 
+		 left join store s on o.store_id = s.id
+		 where 1=1 
+			<if test="orderCode != null and orderCode != ''">
+				 and o.order_code = #{orderCode}
+			</if>
+			<if test="cardNumber != null and cardNumber != ''">
+				 and o.card_number = #{cardNumber}
+			</if>
+			
+			<if test="payStatus != null and payStatus != ''">
+				 and o.pay_status = #{payStatus}
+			</if>
+			
+			<if test="orderStatus != null and orderStatus != ''">
+				 and o.order_status = #{orderStatus}
+			</if>
+			
+			<if test="storeId != null and storeId != ''">
+				 and o.store_id = #{storeId}
+			</if>
+			
+			<if test="orderStatus != null and orderStatus != ''">
+				 and o.order_status = #{orderStatus}
+			</if>
+			
+			<if test="orderStatus != null and orderStatus != ''">
+				 and o.order_status = #{orderStatus}
+			</if>
+			
+			<if test="mobilePhone != null and mobilePhone != ''">
+				 and o.mobile_phone = #{mobilePhone}
+			</if>
+			
+			<if test="memberName != null and memberName != ''">
+				 and o.member_name = #{memberName}
+			</if>
+			order by o.create_date desc
+	</select>
+	
+	
+	<select id="findO2oOrderList" parameterType="StoreOrder" resultMap="BaseO2OResultMap">
+		 select
+		 <include refid="Base_o2o_Column_List" />
+		 FROM store_order o
+         WHERE o.order_type = '2'
+            and o.order_status <![CDATA[ <> ]]> '3'
+			<if test="orderCode != null and orderCode != ''">
+				 and o.order_code = #{orderCode}
+			</if>
+			<if test="cardNumber != null and cardNumber != ''">
+				 and o.card_number = #{cardNumber}
+			</if>
+			
+			<if test="payStatus != null and payStatus != ''">
+				 and o.pay_status = #{payStatus}
+			</if>
+			
+			<if test="orderStatus != null and orderStatus != ''">
+				 and o.order_status = #{orderStatus}
+			</if>
+			
+			<if test="storeId != null and storeId != ''">
+				 and o.store_id = #{storeId}
+			</if>
+			
+			<if test="distributeStatus != null and distributeStatus != ''">
+				 and o.distribute_status = #{distributeStatus}
+			</if>
+			
+			<if test="sendDistributeStatus != null and sendDistributeStatus != ''">
+				 and o.send_distribute_status = #{sendDistributeStatus}
+			</if>
+			
+			<if test="mobilePhone != null and mobilePhone != ''">
+				 and o.mobile_phone = #{mobilePhone}
+			</if>
+			
+			<if test="memberName != null and memberName != ''">
+				 and o.member_name = #{memberName}
+			</if>
+			
+			<if test="appId != null and appId != ''">
+				 and o.app_id = #{appId}
+			</if>
+			order by o.create_date desc
+	</select>
+	
+	
+	<select id="querySendReceiveOrder" parameterType="map" resultMap="BaseO2OResultMap">
+		 select
+		 <include refid="Base_o2o_send_receive_Column_List" />
+		 FROM store_order o
+		 INNER JOIN send_receive_person_order_relation r 
+		 on o.id =r.order_id
+		 where 1=1
+		 	and r.distribute_type=#{distributeType}
+			and r.task_status=#{taskStatus}
+			and r.send_receive_person_id=#{sendReceiveUserId}
+			and r.accept_status <![CDATA[ <> ]]> '3'
+		 	<if test="orderType != null and orderType != ''">
+				 and o.order_type = #{orderType}
+			</if>
+			
+			<if test="appId != null and appId != ''">
+				 and o.app_id = #{appId}
+			</if>
+			order by o.create_date desc
+			LIMIT #{start},#{limit}  
+	</select>
+	
+	
+	
+	<select id="findFactoryHandOnList" parameterType="StoreOrder" resultMap="BaseResultMap">
+			select
+		 <include refid="Base_Column_List" />
+		 from store_order o 
+		 left join store s on o.store_id = s.id
+		 where 1=1 and o.order_status <![CDATA[ <> ]]> '5'
+			<if test="orderCode != null and orderCode != ''">
+				 and o.order_code = #{orderCode}
+			</if>
+			<if test="cardNumber != null and cardNumber != ''">
+				 and o.card_number = #{cardNumber}
+			</if>
+			
+			<if test="payStatus != null and payStatus != ''">
+				 and o.pay_status = #{payStatus}
+			</if>
+			
+			<if test="orderStatus != null and orderStatus != ''">
+				 and o.order_status = #{orderStatus}
+			</if>
+			
+			<if test="mobilePhone != null and mobilePhone != ''">
+				 and o.mobile_phone = #{mobilePhone}
+			</if>
+			
+			<if test="memberName != null and memberName != ''">
+				 and o.member_name = #{memberName}
+			</if>
+			order by o.create_date desc
+	</select>
+
+</mapper>

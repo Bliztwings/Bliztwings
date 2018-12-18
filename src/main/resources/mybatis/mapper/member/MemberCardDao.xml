@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.MemberCardDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="MemberCard">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="memberId" jdbcType="VARCHAR" property="memberId" />
+		 <result column="card_number" jdbcType="VARCHAR" property="cardNumber" />
+		 <result column="cash_amount" jdbcType="DECIMAL" property="cashAmount" />
+		 <result column="gived_amount" jdbcType="DECIMAL" property="givedAmount" />
+		 <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
+		 <result column="discount" jdbcType="DECIMAL" property="discount" />
+		 <result column="payed_method" jdbcType="VARCHAR" property="payedMethod" />
+		 <result column="is_use_password" jdbcType="VARCHAR" property="isUsePassword" />
+		 <result column="password" jdbcType="VARCHAR" property="password" />
+		 <result column="is_invoiced" jdbcType="VARCHAR" property="isInvoiced" />
+		 <result column="invoice_remark" jdbcType="VARCHAR" property="invoiceRemark" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		 <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		 <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		 <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
+		 <result column="card_status" jdbcType="VARCHAR" property="cardStatus" />
+		 <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+		 <result column="member_name" jdbcType="VARCHAR" property="memberName" />
+		 <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+		 
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 c.id, c.card_number, c.cash_amount, c.gived_amount, c.total_amount, c.discount,c.payed_method,c.is_use_password, c.password, c.is_invoiced, c.invoice_remark, c.create_time, c.create_user, c.update_time, c.update_user, c.is_deleted, c.card_status,m.mobile_phone,m.name as member_name,m.id as memberId,s.store_name 
+	</sql>
+	
+	
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from member_card c left join member_card_relation r on c.id=r.card_id left join member m on r.member_id=m.id left join store s on c.store_id=s.id 
+		 where c.id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from member_card
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="MemberCard">
+		 insert into member_card
+ 		(id,card_number,cash_amount,gived_amount,total_amount,discount,payed_method,is_use_password,password,is_invoiced,invoice_remark,create_time,create_user,update_time,update_user,is_deleted,card_status,store_id) 
+		 values 
+ 		(#{id},#{cardNumber},#{cashAmount},#{givedAmount},#{totalAmount},#{discount},#{payedMethod},#{isUsePassword},#{password},#{isInvoiced},#{invoiceRemark},#{createTime},#{createUser},#{updateTime},#{updateUser},#{isDeleted},#{cardStatus},#{storeId}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="MemberCard">
+		 update member_card
+ 		 <set> 
+ 		    <if test="srcCardNumber != null and srcCardNumber != ''">
+				 src_card_number = #{srcCardNumber},
+			</if>
+			<if test="cardNumber != null and cardNumber != ''">
+				 card_number = #{cardNumber},
+			</if>
+			<if test="cashAmount != null">
+				 cash_amount = #{cashAmount},
+			</if>
+			<if test="givedAmount != null">
+				 gived_amount = #{givedAmount},
+			</if>
+			<if test="totalAmount != null">
+				 total_amount = #{totalAmount},
+			</if>
+			<if test="discount != null">
+				 discount = #{discount},
+			</if>
+			<if test="payedMethod != null and payedMethod != ''">
+				 payed_method = #{payedMethod},
+			</if>
+			<if test="isUsePassword != null and isUsePassword != ''">
+				 is_use_password = #{isUsePassword},
+			</if>
+			<if test="password != null and password != ''">
+				 password = #{password},
+			</if>
+			<if test="isInvoiced != null and isInvoiced != ''">
+				 is_invoiced = #{isInvoiced},
+			</if>
+			<if test="invoiceRemark != null and invoiceRemark != ''">
+				 invoice_remark = #{invoiceRemark},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				 create_time = #{createTime},
+			</if>
+			<if test="createUser != null and createUser != ''">
+				 create_user = #{createUser},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				 update_user = #{updateUser},
+			</if>
+			<if test="isDeleted != null and isDeleted != ''">
+				 is_deleted = #{isDeleted},
+			</if>
+			<if test="cardStatus != null and cardStatus != ''">
+				 card_status = #{cardStatus},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+	
+	<!-- 挂失  -->
+	<update id="reportLoss" parameterType="String">
+		 update member_card set card_status = 'report_loss' where id = #{id} and card_status not in('back_card','report_loss')
+	</update>
+	
+	<!-- 取消挂失  -->
+	<update id="unReportLoss" parameterType="String">
+		 update member_card set card_status = 'normal' where id = #{id} and card_status='report_loss'
+	</update>
+	
+	<!-- 会员卡退卡  -->
+	<update id="reback" parameterType="String">
+		 update member_card set card_status = 'back_card' where id = #{id} and card_status in('normal','report_loss','fill_card')
+	</update>
+	<!-- 会员卡作废  -->
+	<update id="cancel" parameterType="String">
+		 update member_card set card_status = 'cancel' where id = #{id} and card_status !='cancel'
+	</update>
+	
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="MemberCard" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from member_card c left join member_card_relation r on c.id=r.card_id left join member m on r.member_id=m.id left join store s on c.store_id=s.id
+		 where 1=1 
+		 	<if test="storeId != null and storeId != ''">
+				 and c.store_id = #{storeId}
+			</if>
+			<if test="cardNumber != null and cardNumber != ''">
+				 and c.card_number = #{cardNumber}
+			</if>
+			<if test="payedMethod != null and payedMethod != ''">
+				 and c.payed_method = #{payedMethod}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				 and c.create_time = #{createTime,jdbcType=DATE}
+			</if>
+			<if test="cardStatus != null and cardStatus != ''">
+				 and c.card_status = #{cardStatus}
+			</if>
+			<if test="mobilePhone != null and mobilePhone != ''">
+				 and m.mobile_phone = #{mobilePhone}
+			</if>
+	</select>
+	
+	<select id="queryMemberByCardOrMobile" parameterType="MemberCard" resultMap="BaseResultMap">
+			select
+				w.id,
+				w.card_number,
+				w.cash_amount,
+				w.gived_amount,
+				w.total_amount,
+				w.discount,
+				w.payed_method,
+				w.is_use_password,
+				w. PASSWORD,
+				w.is_invoiced,
+				w.invoice_remark,
+				w.create_time,
+				w.create_user,
+				w.update_time,
+				w.update_user,
+				w.is_deleted,
+				w.card_status,
+				m.mobile_phone,
+				m. NAME AS member_name,
+				m.id AS memberId,
+				s.store_name
+	FROM member m
+	LEFT JOIN (
+		SELECT * 
+		FROM member_card_relation r
+		LEFT JOIN member_card c ON c.id = r.card_id
+			WHERE (c.card_status = 'normal' OR c.card_status = 'fill_card')
+	) w ON m.id = w.member_id
+	LEFT JOIN store s ON w.store_id = s.id
+	where (m.mobile_phone = #{queryKey} || w.card_number=#{queryKey} || m.id=#{queryKey} || m.NAME =#{queryKey})  
+	<if test="appId == null || appId == ''">
+		 and m.app_id is null
+	</if>
+	
+	<if test="appId != null and appId != ''">
+		 and m.app_id =#{appId}
+	</if>
+			
+	</select>
+		
+	<!-- 获取所有未绑定的会员卡号 -->
+	<select id="getNewCardNos" parameterType="String" resultType="String">
+		 select card_number from member_card c where store_Id=#{storeId} and card_status='new'
+	</select>
+	<!-- 通过卡号获取卡数据 -->
+	<select id="getCardByNo" parameterType="String" resultMap="BaseResultMap">
+		 select <include refid="Base_Column_List" /> from member_card c left join member_card_relation r on c.id=r.card_id left join member m on r.member_id=m.id left join store s on c.store_id=s.id where c.card_number=#{cardNo}
+	</select>
+	<select id="queryCardByMemberId" parameterType="String" resultMap="BaseResultMap">
+		 select <include refid="Base_Column_List" /> from member_card c left join member_card_relation r on c.id=r.card_id left join member m on r.member_id=m.id left join store s on c.store_id=s.id where m.id=#{memberId} and card_status in('normal','report_loss','fill_card')
+	</select>
+	
+</mapper>

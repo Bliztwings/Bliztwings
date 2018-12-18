@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.SendWashingDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="SendWashing">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="send_user_id" jdbcType="VARCHAR" property="sendUserId" />
+		 <result column="send_user_name" jdbcType="VARCHAR" property="sendUserName" />
+		 <result column="send_date" jdbcType="TIMESTAMP" property="sendDate" />
+		 <result column="sendDateStr" jdbcType="VARCHAR" property="sendDateStr" />
+		 
+		 <result column="send_number" jdbcType="VARCHAR" property="sendNumber" />
+		 <result column="clothes_count" jdbcType="VARCHAR" property="clothesCount" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+	</resultMap>
+	
+	
+	
+	<resultMap id="ReceptionStatisticsMap" type="ReceptionStatisticsVo">
+		<result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		<result column="store_name" jdbcType="VARCHAR" property="storeName" />
+		<result column="create_date" jdbcType="VARCHAR" property="sendDateStr" />
+		<result column="clothes_count" jdbcType="VARCHAR" property="count" />
+		<result column="sum_amount" jdbcType="VARCHAR" property="amount" />
+		 
+		 
+	</resultMap>
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+			w.id,
+			w.send_user_id,
+			w.send_user_name,
+			w.send_date,
+			DATE_FORMAT(w.send_date,'%Y-%c-%d %H:%i:%s') as sendDateStr,
+			w.send_number,
+			w.clothes_count,
+			w.store_id,
+			s.store_name
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from send_washing w
+		 LEFT JOIN store s ON w.store_id = s.id
+		 where w.id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from send_washing
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+	insert into send_washing
+	(id,send_user_id,send_user_name,send_date,send_number,clothes_count,store_id)
+	values
+	(#{id},#{sendUserId},#{sendUserName},#{sendDate},#{sendNumber},#{clothesCount},#{storeId})
+</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="SendWashing">
+		 update send_washing
+ 		 <set> 
+			<if test="sendUserName != null and sendUserName != ''">
+				 send_user_name = #{sendUserName},
+			</if>
+			
+			<if test="sendNumber != null and sendNumber != ''">
+				 send_number = #{sendNumber},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="StoreClothes" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+			from send_washing w
+		 	LEFT JOIN store s ON w.store_id = s.id
+		 	where 1=1 
+			<if test="beginDate!=null and beginDate!=''">
+    			<![CDATA[ and DATE_FORMAT(w.send_date, '%Y-%m-%d')>=  DATE_FORMAT(#{beginDate}, '%Y-%m-%d')   ]]>
+			</if>
+			
+			<if test="endDate!=null and endDate!=''">
+    			<![CDATA[ and DATE_FORMAT(w.send_date, '%Y-%m-%d')<=  DATE_FORMAT(#{endDate}, '%Y-%m-%d')   ]]>
+			</if>
+			
+			<if test="sendNumber != null and sendNumber != ''">
+				 and w.send_number = #{sendNumber}
+			</if>
+			
+			<if test="storeId != null and storeId != ''">
+				 and w.store_id = #{storeId}
+			</if>
+			
+			order by w.send_date desc
+	</select>
+	
+	<!-- <select id="receptionStatistics" parameterType="ReceptionStatisticsVo" resultMap="ReceptionStatisticsMap">
+		 
+			SELECT w.store_id,DATE_FORMAT(w.send_date,'%Y-%m-%d') as sendDateStr ,SUM(w.clothes_count) as count,s.store_name
+			from send_washing w 
+			LEFT JOIN store s on s.id =w.store_id
+			where 1=1 
+			<if test="storeId != null and storeId != ''">
+				 and w.store_id = #{storeId}
+			</if>
+			<if test="beginDate!=null and beginDate!=''">
+    			<![CDATA[ and DATE_FORMAT(w.send_date, '%Y-%m-%d')>=  DATE_FORMAT(#{beginDate}, '%Y-%m-%d')   ]]>
+			</if>
+			
+			<if test="endDate!=null and endDate!=''">
+    			<![CDATA[ and DATE_FORMAT(w.send_date, '%Y-%m-%d')<=  DATE_FORMAT(#{endDate}, '%Y-%m-%d')   ]]>
+			</if>
+			GROUP BY w.store_id,DATE_FORMAT(w.send_date,'%Y-%m-%d')
+			
+	</select> -->
+	
+	
+	<select id="receptionStatistics" parameterType="ReceptionStatisticsVo" resultMap="ReceptionStatisticsMap">
+		 SELECT v.* from 
+		(
+
+			SELECT
+				store_id AS store_id,
+				store_name AS store_name,
+				sum(paid_amount) as amount,
+				sum(clothes_count) as count,
+				DATE_FORMAT(create_date, '%Y-%m-%d') AS create_date
+			FROM
+				store_order 
+			GROUP BY
+				store_id,
+				store_name,
+				DATE_FORMAT(create_date, '%Y-%m-%d')
+		) v
+
+		where 1=1
+			
+		<if test="storeId != null and storeId != ''">
+			 and v.store_id = #{storeId}
+		</if>
+		<if test="beginDate!=null and beginDate!=''">
+   			<![CDATA[ and DATE_FORMAT(v.create_date, '%Y-%m-%d')>=  DATE_FORMAT(#{beginDate}, '%Y-%m-%d')   ]]>
+		</if>
+	
+		<if test="endDate!=null and endDate!=''">
+   			<![CDATA[ and DATE_FORMAT(v.create_date, '%Y-%m-%d')<=  DATE_FORMAT(#{endDate}, '%Y-%m-%d')   ]]>
+		</if>
+	 	order by v.create_date desc
+		 	
+	</select>
+	
+	<select id="statisticalAnalysis" parameterType="ReceptionStatisticsVo" resultMap="ReceptionStatisticsMap">
+		 SELECT v.* from 
+		(
+
+			SELECT 
+			    f.store_id AS store_id,
+				f.store_name AS store_name,
+				sum(f.paid_amount) as amount,
+				sum(f.clothes_count) as count 
+			from (
+
+					SELECT 
+					     store_id,
+					     store_name,
+					     paid_amount,
+					     clothes_count,
+					     create_date 
+					from store_order
+					
+					where 1=1
+					<if test="beginDate!=null and beginDate!=''">
+		   				<![CDATA[ and DATE_FORMAT(create_date, '%Y-%m-%d')>=  DATE_FORMAT(#{beginDate}, '%Y-%m-%d')   ]]>
+					</if>
+			
+					<if test="endDate!=null and endDate!=''">
+			   			<![CDATA[ and DATE_FORMAT(create_date, '%Y-%m-%d')<=  DATE_FORMAT(#{endDate}, '%Y-%m-%d')   ]]>
+					</if>
+					<if test="storeId != null and storeId != ''">
+			 			and store_id = #{storeId}
+					</if>
+	   		) f
+			
+			GROUP BY
+				f.store_id,
+				f.store_name
+		) v
+		 	
+	</select>
+	
+	
+
+</mapper>

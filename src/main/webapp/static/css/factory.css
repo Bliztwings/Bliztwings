@@ -1,0 +1,124 @@
+.store-left-td-div:active,
+.store-left-td-div:hover,
+.store-left-td-div:focus{
+background-image: url("../images/take1.png");
+cursor: pointer;
+}
+
+.store-left-td-div {
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background: url("../images/take.png");
+}
+
+
+.store-left-td-div1:active,
+.store-left-td-div1:hover,
+.store-left-td-div1:focus{
+background-image: url("../images/receive1.png");
+cursor: pointer;
+}
+
+.store-left-td-div1 {
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background: url("../images/receive.png");
+}
+
+.store-left-td-div2:active,
+.store-left-td-div2:hover,
+.store-left-td-div2:focus{
+background-image: url("../images/member1.png");
+cursor: pointer;
+}
+
+.store-left-td-div2 {
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background: url("../images/member.png");
+}
+
+
+.factory-left-td-div {
+    width: 110px;
+    height: 110px;
+    line-height: 110px;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.infactory-td-div {
+    width: 75px;
+    height: 40px;
+    line-height: 40px;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    text-align: center;
+    vertical-align: middle;
+     cursor: pointer;
+}
+.infactory-td-div-content {
+    height: 40px;
+    line-height: 40px;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    text-align: left;
+    margin-left: 8px;
+    vertical-align: middle;
+     cursor: pointer;
+}
+.infactory-td-div-title {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    background-color: white;
+    color: black;
+    font-size: 28px;
+    text-align: center;
+    vertical-align: middle;
+     cursor: pointer;
+}
+.dowashing-td-div {
+    width: 90px;
+    height: 50px;
+    line-height: 40px;
+    background-color: white;
+    color: black;
+    font-size: 18px;
+    text-align: center;
+    vertical-align: middle;
+     cursor: pointer;
+}
+.dowashing-td-div-content {
+    height: 50px;
+    line-height: 40px;
+    background-color: white;
+    color: black;
+    font-size: 18px;
+    text-align: left;
+    margin-left: 8px;
+    vertical-align: middle;
+    cursor: pointer;
+}

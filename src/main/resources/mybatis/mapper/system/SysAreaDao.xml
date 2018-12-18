@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.SysAreaDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="SysArea">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="code" jdbcType="VARCHAR" property="code" />
+		 <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+		 <result column="name" jdbcType="VARCHAR" property="name" />
+		 <result column="level" jdbcType="TINYINT" property="level" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id, code, parent_code, name, level
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="Integer" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from sys_area
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="Integer">
+		 delete from sys_area
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="SysArea">
+		 insert into sys_area
+ 		(id,code,parent_code,name,level) 
+		 values 
+ 		(#{id},#{code},#{parentCode},#{name},#{level}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="SysArea">
+		 update sys_area
+ 		 <set> 
+			<if test="code != null and code != ''">
+				 code = #{code},
+			</if>
+			<if test="parentCode != null and parentCode != ''">
+				 parent_code = #{parentCode},
+			</if>
+			<if test="name != null and name != ''">
+				 name = #{name},
+			</if>
+			<if test="level != null and level != ''">
+				 level = #{level},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="SysArea" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from sys_area
+		 where 1=1 
+			<if test="code != null and code != ''">
+				 and code = #{code}
+			</if>
+			<if test="parentCode != null and parentCode != ''">
+				 and parent_code = #{parentCode}
+			</if>
+			<if test="name != null and name != ''">
+				 and name = #{name}
+			</if>
+			<if test="level != null and level != ''">
+				 and level = #{level}
+			</if>
+	</select>
+
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.ShoppingCartDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="ShoppingCart">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="produce_id" jdbcType="VARCHAR" property="produceId" />
+		 <result column="member_id" jdbcType="VARCHAR" property="memberId" />
+		 <result column="count" jdbcType="DECIMAL" property="count" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		 <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		 <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		 <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id, produce_id, member_id, count, create_time, create_user, update_time, update_user, is_deleted
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from shopping_cart
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from shopping_cart
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="ShoppingCart">
+		 insert into shopping_cart
+ 		(id,produce_id,member_id,count,create_time,create_user,update_time,update_user,is_deleted) 
+		 values 
+ 		(#{id},#{produceId},#{memberId},#{count},#{createTime},#{createUser},#{updateTime},#{updateUser},#{isDeleted}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="ShoppingCart">
+		 update shopping_cart
+ 		 <set> 
+			<if test="produceId != null and produceId != ''">
+				 produce_id = #{produceId},
+			</if>
+			<if test="memberId != null and memberId != ''">
+				 member_id = #{memberId},
+			</if>
+			<if test="count != null and count != ''">
+				 count = #{count},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				 create_time = #{createTime},
+			</if>
+			<if test="createUser != null and createUser != ''">
+				 create_user = #{createUser},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				 update_user = #{updateUser},
+			</if>
+			<if test="isDeleted != null and isDeleted != ''">
+				 is_deleted = #{isDeleted},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="ShoppingCart" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from shopping_cart
+		 where 1=1 
+			<if test="produceId != null and produceId != ''">
+				 and produce_id = #{produceId}
+			</if>
+			<if test="memberId != null and memberId != ''">
+				 and member_id = #{memberId}
+			</if>
+			<if test="count != null and count != ''">
+				 and count = #{count}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				 and create_time = #{createTime}
+			</if>
+			<if test="createUser != null and createUser != ''">
+				 and create_user = #{createUser}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 and update_time = #{updateTime}
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				 and update_user = #{updateUser}
+			</if>
+			<if test="isDeleted != null and isDeleted != ''">
+				 and is_deleted = #{isDeleted}
+			</if>
+	</select>
+
+</mapper>

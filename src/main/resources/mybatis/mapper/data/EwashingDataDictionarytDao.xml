@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.EwashingDataDictionaryDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="EwashingDataDictionary">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="data_type" jdbcType="VARCHAR" property="dataType" />
+		 <result column="price" jdbcType="DECIMAL" property="price" />
+		 <result column="image_path" jdbcType="VARCHAR" property="imagePath" />
+		 <result column="o2o_price" jdbcType="VARCHAR" property="o2oPrice" />
+		 <result column="produce_category_id" jdbcType="VARCHAR" property="produceCategoryId" />
+		 <result column="produce_parent_category_id" jdbcType="VARCHAR" property="produceParentCategoryId" />
+		 <result column="common_price" jdbcType="DECIMAL" property="commonPrice" />
+		 <result column="luxuries_price" jdbcType="DECIMAL" property="luxuriesPrice" />
+		 <result column="swy_price" jdbcType="DECIMAL" property="swy_price" />
+		 
+		 
+		 <result column="data_name" jdbcType="VARCHAR" property="dataName" />
+		 <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		 <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		 <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+		 <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+		 <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+		 <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+		 
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 	id,
+			data_type,
+			data_name,
+			o2o_price,
+			swy_price,
+			image_path,
+			produce_category_id,
+			produce_parent_category_id,
+			create_date,
+			create_user_name,
+			create_user_id,
+			update_user_id,
+			update_date,
+			update_user_name,
+			CASE when price is null or 'Null' then 0 else price end price,
+			CASE when common_price is null or 'Null' then 0 else common_price end common_price,
+		    CASE when luxuries_price is null or 'Null' then 0 else luxuries_price end luxuries_price
+	</sql>
+	
+	
+	<select id="queryTextNameByIds" resultMap="BaseResultMap">
+		select
+		 <include refid="Base_Column_List" />
+		 from store_data_dictionary
+		 where id in
+		 
+		 <foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_data_dictionary
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from store_data_dictionary
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+		 insert into store_data_dictionary
+ 		(id ,data_type ,o2o_price,swy_price,image_path,produce_category_id,produce_parent_category_id,data_name,create_date,create_user_id,create_user_name,price,common_price,luxuries_price) 
+		 values 
+ 		(#{id},#{dataType},#{o2oPrice},#{swy_price},#{imagePath},#{produceCategoryId},#{produceParentCategoryId},#{dataName},#{createDate},#{createUserId},#{createUserName},#{price},#{commonPrice},#{luxuriesPrice}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="EwashingDataDictionary">
+		 update store_data_dictionary
+ 		 <set> 
+			<if test="dataName != null and dataName != ''">
+				 data_name = #{dataName},
+			</if>
+			
+			<if test="price != null and price != ''">
+				 price = #{price},
+			</if>
+			
+			<if test="o2oPrice != null and o2oPrice != ''">
+				 o2o_price = #{o2oPrice},
+			</if>
+			
+			<if test="swy_price != null and swy_price != ''">
+				 swy_price = #{swy_price},
+			</if>
+			
+			<if test="commonPrice != null and commonPrice != ''">
+				 common_price = #{commonPrice},
+			</if>
+			
+			<if test="luxuriesPrice != null and luxuriesPrice != ''">
+				 luxuries_price = #{luxuriesPrice},
+			</if>
+			
+			<if test="produceCategoryId != null and produceCategoryId != ''">
+				 produce_category_id = #{produceCategoryId},
+			</if>
+			
+			<if test="produceParentCategoryId != null and produceParentCategoryId != ''">
+				 produce_parent_category_id = #{produceParentCategoryId},
+			</if>
+			
+			<if test="imagePath != null and imagePath != ''">
+				 image_path = #{imagePath},
+			</if>
+			
+			<if test="updateDate != null and updateDate != ''">
+				 update_date = #{updateDate},
+			</if>
+			
+			<if test="updateUserName != null and updateUserName != ''">
+				 update_user_name = #{updateUserName},
+			</if>
+			
+			<if test="updateUserId != null and updateUserId != ''">
+				 update_user_id = #{updateUserId},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="EwashingDataDictionary" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_data_dictionary
+		 where 1=1 
+			<if test="dataName != null and dataName != ''">
+				 and data_name = #{dataName}
+			</if>
+			
+			<if test="dataType != 0">
+				 and data_type = #{dataType}
+			</if>
+			
+			<if test="queryKey != null and queryKey != ''">
+				 and data_name LIKE CONCAT('%','${queryKey}','%' )
+			</if>
+			
+			
+			<if test="dataType == 1">
+				 <if test ="serviceType==1" >
+				 	order by price asc
+				 </if>
+				 
+				 <if test ="serviceType==2" >
+				 	order by common_price asc
+				 </if>
+				 
+				 <if test ="serviceType==3" >
+				 	order by luxuries_price asc
+				 </if>
+				 
+			</if>
+			
+	</select>
+	
+	<!-- 分页查询  -->
+	<select id="getDataDictionaryByCategoryId" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_data_dictionary
+		 where 1=1 
+			<if test="categoryId != null and categoryId != ''">
+				 and produce_category_id = #{categoryId}
+			</if>
+			
+			<if test="queryKey != null and queryKey != ''">
+				 and data_name LIKE CONCAT('%','${queryKey}','%' )
+			</if>
+	</select>
+	
+
+</mapper>

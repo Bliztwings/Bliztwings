@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.EwashingStoreClothesDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="StoreClothes">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+		 <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+		 <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+		 <result column="payStatus" jdbcType="VARCHAR" property="payStatus" />
+		 
+		 <result column="urgency" jdbcType="VARCHAR" property="urgency" />
+		 <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
+		 <result column="member_id" jdbcType="VARCHAR" property="memberId" />
+		 <result column="member_name" jdbcType="VARCHAR" property="memberName" />
+		 <result column="card_number" jdbcType="VARCHAR" property="cardNumber" />
+		 
+		 <result column="send_number" jdbcType="VARCHAR" property="sendNumber" />
+		 <result column="sendDateStr" jdbcType="VARCHAR" property="sendDateStr" />
+		 
+		 <result column="clothes_name" jdbcType="VARCHAR" property="clothesName" />
+		 <result column="clothes_count" jdbcType="VARCHAR" property="clothesCount" />
+		 <result column="service_type" jdbcType="TIMESTAMP" property="serviceType" />
+		 <result column="color" jdbcType="VARCHAR" property="color" />
+		 <result column="brand" jdbcType="VARCHAR" property="brand" />
+		 <result column="attachment" jdbcType="VARCHAR" property="attachment" />
+		 <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+		 <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+		 <result column="flaw" jdbcType="VARCHAR" property="flaw" />
+		 <result column="price" jdbcType="VARCHAR" property="price" />
+		 <result column="status" jdbcType="VARCHAR" property="status" />
+		 <result column="takingDate" jdbcType="TIMESTAMP" property="takingDate" />
+		 <result column="service_fee" jdbcType="TIMESTAMP" property="serviceFee" />
+		 <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		 <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		 <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+		 <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+		 
+		 <result column="handOnArea" jdbcType="VARCHAR" property="handOnArea" />
+		 <result column="handOnNo" jdbcType="VARCHAR" property="handOnNo" />
+		 <result column="handOnDateStr" jdbcType="VARCHAR" property="handOnDateStr" />
+		 <result column="factoryHandOnArea" jdbcType="VARCHAR" property="factoryHandOnArea" />
+		 <result column="factoryHandOnNo" jdbcType="VARCHAR" property="factoryHandOnNo" />
+		 
+		 <result column="leaveFactoryNumber" jdbcType="VARCHAR" property="leaveFactoryNumber" />
+		 <result column="leaveDateStr" jdbcType="VARCHAR" property="leaveDateStr" />
+		 
+		 <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+		 <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+	</resultMap>
+	
+	<!-- 单表查询 -->
+	<sql id="Base_Column">
+		c.id,
+		c.order_code,
+		c.order_id,
+		c.bar_code,
+		c.urgency,
+		c.member_id,
+		c.card_number,
+		c.clothes_name,
+		c.service_type,
+		c.color,
+		c.brand,
+		c.flaw,
+		c.mobile_phone,
+		c.telephone,
+		c.price,
+		c.status,
+		c.service_fee,
+		c.create_date,
+		c.create_user_id,
+		c.create_user_name,
+		c.update_date,
+		c.update_user_name,
+		c.update_user_id,
+		c.store_id
+	</sql>
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		c.id,
+		c.order_code,
+		o.id as order_id,
+		c.bar_code,
+		c.urgency,
+		c.member_id,
+		m.name as member_name,
+		c.card_number,
+		d.data_name as clothes_name,
+		c.service_type,
+		d1.data_name as color,
+		d2.data_name as brand,
+		c.attachment,
+		c.flaw,
+		c.mobile_phone,
+		c.telephone,
+		c.price,
+		c.status,
+		c.service_fee,
+		c.create_date,
+		c.create_user_id,
+		c.create_user_name,
+		c.update_date,
+		c.update_user_name,
+		c.update_user_id,
+		cf1.opt_date as takingDate,
+		c.store_id,
+		s.store_name,
+		a.area as handOnArea,
+		n.hand_on_no as handOnNo,
+		DATE_FORMAT(cf.opt_date,'%Y-%c-%d %H:%i:%s') as handOnDateStr,
+		
+		
+		o.pay_status as payStatus,
+		fa.area as factoryHandOnArea,
+		fn.hand_on_no as factoryHandOnNo,
+		
+		o.clothes_count,
+		wd.send_number,
+		DATE_FORMAT(w.send_date,'%Y-%c-%d %H:%i:%s') as sendDateStr,
+		fd.leave_factory_number as leaveFactoryNumber,
+		DATE_FORMAT(lf.leave_date,'%Y-%c-%d %H:%i:%s') as leaveDateStr
+		
+	</sql>
+
+	<select id="findClothesById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column" />
+		 from   store_clothes c
+		 where c.id = #{id}
+	 </select>
+	
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select 
+		    c.id,
+			c.order_code,
+			c.order_id,
+			c.bar_code,
+			c.urgency,
+			c.member_id,
+			c.card_number,
+			c.attachment,
+			c.flaw,
+			c.mobile_phone,
+			c.telephone,
+			c.price,
+			c. STATUS,
+			c.service_fee,
+			c.create_date,
+			c.create_user_id,
+			c.create_user_name,
+			c.update_date,
+			c.update_user_name,
+			c.update_user_id,
+			c.store_id,
+			s.store_name,
+			c.factory_hand_on_area as factoryHandOnArea,
+			c.factory_hand_on_no as factoryHandOnNo,
+			c.hand_on_area as handOnArea,
+			c.hand_on_no as  handOnNo,
+			o.pay_status AS payStatus
+		 from store_clothes c
+			  LEFT JOIN store s ON c.store_id = s.id
+		      LEFT JOIN store_order o ON c.order_code = o.order_code
+		 where c.id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from store_clothes
+		 where id = #{clothesId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+	insert into store_clothes
+	(id,order_code,urgency,bar_code,member_id,card_number,clothes_name,service_type,color,brand,attachment
+	,mobile_phone,telephone,flaw,price,status,service_fee,create_date,create_user_name,store_id,store_name,create_user_id,order_id)
+	values
+	(#{id},#{orderCode},#{urgency},#{barCode},#{memberId},#{cardNumber},#{clothesName},#{serviceType},#{color},#{brand},
+	#{attachment},#{mobilePhone},#{telephone},#{flaw},#{price},#{status},#{serviceFee},#{createDate},
+	#{createUserName},#{storeId},#{storeName},#{createUserId},#{orderId})
+</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="StoreClothes">
+		 update store_clothes
+ 		 <set> 
+			<if test="status != null and status != ''">
+				 status = #{status},
+			</if>
+			
+			<if test="updateUserName != null and updateUserName != ''">
+				 update_user_name = #{updateUserName},
+			</if>
+			
+			<if test="handOnArea != null and handOnArea != ''">
+				 hand_on_area = #{handOnArea},
+			</if>
+			
+			<if test="handOnNo != null and handOnNo != ''">
+				 hand_on_no = #{handOnNo},
+			</if>
+			
+			<if test="factoryHandOnArea != null and factoryHandOnArea != ''">
+				 factory_hand_on_area = #{factoryHandOnArea},
+			</if>
+			
+			<if test="factoryHandOnNo != null and factoryHandOnNo != ''">
+				 factory_hand_on_no = #{factoryHandOnNo},
+			</if>
+			
+			
+			<if test="updateDate != null and updateDate != ''">
+				 update_date = #{updateDate},
+			</if>
+			
+			
+			<if test="updateUserId != null and updateUserId != ''">
+				 update_user_id = #{updateUserId},
+			</if>
+			
+			<if test="clothesName != null and clothesName != ''">
+				 clothes_name = #{clothesName},
+			</if>
+			
+			<if test="serviceType != null and serviceType != ''">
+				 service_type = #{serviceType},
+			</if>
+			
+			<if test="urgency != null and urgency != ''">
+				 urgency = #{urgency},
+			</if>
+			
+			<if test="brand != null and brand != ''">
+				 brand = #{brand},
+			</if>
+			
+			<if test="color != null and color != ''">
+				 color = #{color},
+			</if>
+			
+			<if test="flaw != null and flaw != ''">
+				 flaw = #{flaw},
+			</if>
+			
+			<if test="price != null and price != ''">
+				 price = #{price},
+			</if>
+			
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<update id="updateStoreClothes" parameterType="StoreClothes">
+		 update store_clothes
+ 		 <set> 
+			<if test="status != null and status != ''">
+				 status = #{status},
+			</if>
+			
+			<if test="updateUserName != null and updateUserName != ''">
+				 update_user_name = #{updateUserName},
+			</if>
+			
+			<if test="updateDate != null and updateDate != ''">
+				 update_date = #{updateDate},
+			</if>
+			
+			<if test="updateUserId != null and updateUserId != ''">
+				 update_user_id = #{updateUserId},
+			</if>
+			
+			<if test="handOnArea != null and handOnArea != ''">
+				 hand_on_area = #{handOnArea},
+			</if>
+			
+			<if test="handOnNo != null and handOnNo != ''">
+				 hand_on_no = #{handOnNo},
+			</if>
+			
+			<if test="factoryHandOnArea != null and factoryHandOnArea != ''">
+				 factory_hand_on_area = #{factoryHandOnArea},
+			</if>
+			
+			<if test="factoryHandOnNo != null and factoryHandOnNo != ''">
+				 factory_hand_on_no = #{factoryHandOnNo},
+			</if>
+			
+ 		 </set>
+		 where order_code = #{orderCode}
+	</update>
+	
+	<update id="updateStoreClothesForBatch" parameterType="map">
+		 update store_clothes
+ 		 <set> 
+			<if test="status != null and status != ''">
+				 status = #{status},
+			</if>
+			
+			<if test="updateUserName != null and updateUserName != ''">
+				 update_user_name = #{updateUserName},
+			</if>
+			
+			<if test="updateDate != null and updateDate != ''">
+				 update_date = #{updateDate},
+			</if>
+			
+			<if test="updateUserId != null and updateUserId != ''">
+				 update_user_id = #{updateUserId},
+			</if>
+ 		 </set>
+		 where id in 
+		 
+		 <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+		 	#{item}
+		 </foreach>
+	</update>
+	
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="StoreClothes" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_clothes c
+			LEFT JOIN store s on c.store_id =s.id
+			LEFT JOIN store_order o on c.order_code =o.order_code
+			LEFT JOIN store_data_dictionary d on c.clothes_name =d.id
+			LEFT JOIN store_data_dictionary d1 on c.color =d1.id
+			LEFT JOIN store_data_dictionary d2 on c.brand =d2.id
+			LEFT JOIN member m on c.member_id =m.id
+			
+			LEFT JOIN store_hand_on_area a on c.hand_on_area =a.id and a.hand_type='1'
+      		LEFT JOIN store_hand_on_no n on c.hand_on_no =n.id and n.hand_type='1'
+	      	LEFT JOIN store_clothes_flow cf on c.id =cf.clothes_id and cf.clothes_status='15'
+      		LEFT JOIN store_hand_on_area fa on c.factory_hand_on_area =fa.id and fa.hand_type=CASE WHEN o.app_id = 'wx614b63f73b55d7ef' THEN '3'  WHEN o.app_id = 'wxc6097b5bf9ba801d' THEN '4'  ELSE '2' END  
+      		LEFT JOIN store_hand_on_no fn on c.factory_hand_on_no =fn.id and fn.hand_type=CASE WHEN o.app_id = 'wx614b63f73b55d7ef' THEN '3'  WHEN o.app_id = 'wxc6097b5bf9ba801d' THEN '4'  ELSE '2' END  
+	      	LEFT JOIN store_clothes_flow cf1 on c.id =cf1.clothes_id and cf1.clothes_status='16'
+	      		
+      		LEFT JOIN send_washing_detail wd on c.id =wd.clothes_id
+			LEFT JOIN send_washing w on w.send_number =wd.send_number
+			LEFT JOIN leave_factory_detail fd on c.id =fd.clothes_id
+			LEFT JOIN leave_factory lf on fd.leave_factory_number =lf.leave_factory_number
+		 where 1=1 
+			<if test="barCode != null and barCode != ''">
+				 and c.bar_code = #{barCode}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				 and c.store_id = #{storeId}
+			</if>
+			
+			<if test="status != null and status != ''">
+				 and c.status = #{status}
+			</if>
+			
+			<if test="orderCode != null and orderCode != ''">
+				 and c.order_code = #{orderCode}
+			</if>
+			
+			<if test="memberName != null and memberName != ''">
+				 and m.name=#{memberName}
+			</if>
+			
+			<if test="mobilePhone != null and mobilePhone != ''">
+				 and c.mobile_phone=#{mobilePhone}
+			</if>
+			
+			order by c.create_date desc
+	</select>
+	
+	<!-- 分页查询  -->
+	<select id="findListO2o" parameterType="StoreClothes" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_clothes c
+			LEFT JOIN store s on c.store_id =s.id
+			LEFT JOIN store_order o on c.order_code =o.order_code
+			LEFT JOIN store_data_dictionary d on c.clothes_name =d.id
+			LEFT JOIN store_data_dictionary d1 on c.color =d1.id
+			LEFT JOIN store_data_dictionary d2 on c.brand =d2.id
+			LEFT JOIN member m on c.member_id =m.id
+			
+			LEFT JOIN store_hand_on_area a on c.hand_on_area =a.id and a.hand_type='1'
+      		LEFT JOIN store_hand_on_no n on c.hand_on_no =n.id and n.hand_type='1'
+	      	LEFT JOIN store_clothes_flow cf on c.id =cf.clothes_id and cf.clothes_status='15'
+      		LEFT JOIN store_hand_on_area fa on c.factory_hand_on_area =fa.id and fa.hand_type=#{handType}
+      		LEFT JOIN store_hand_on_no fn on c.factory_hand_on_no =fn.id and fn.hand_type=#{handType}
+	      	LEFT JOIN store_clothes_flow cf1 on c.id =cf1.clothes_id and cf1.clothes_status='16'
+	      		
+      		LEFT JOIN send_washing_detail wd on c.id =wd.clothes_id
+			LEFT JOIN send_washing w on w.send_number =wd.send_number
+			LEFT JOIN leave_factory_detail fd on c.id =fd.clothes_id
+			LEFT JOIN leave_factory lf on fd.leave_factory_number =lf.leave_factory_number
+		 where 1=1 
+			<if test="barCode != null and barCode != ''">
+				 and c.bar_code = #{barCode}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				 and c.store_id = #{storeId}
+			</if>
+			
+			<if test="status != null and status != ''">
+				 and c.status = #{status}
+			</if>
+			
+			<if test="orderCode != null and orderCode != ''">
+				 and c.order_code = #{orderCode}
+			</if>
+			
+			<if test="memberName != null and memberName != ''">
+				 and m.name=#{memberName}
+			</if>
+			
+			<if test="mobilePhone != null and mobilePhone != ''">
+				 and c.mobile_phone=#{mobilePhone}
+			</if>
+			
+			order by c.create_date desc
+	</select>
+	
+	<select id="findHandonClothes" parameterType="StoreClothes" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_clothes c
+		    INNER JOIN (SELECT o.* from store_order o where o.order_status='5') o on c.order_code =o.order_code
+			LEFT JOIN store s on c.store_id =s.id
+			LEFT JOIN store_data_dictionary d on c.clothes_name =d.id
+			LEFT JOIN store_data_dictionary d1 on c.color =d1.id
+			LEFT JOIN store_data_dictionary d2 on c.brand =d2.id
+			LEFT JOIN member m on c.member_id =m.id
+			
+			LEFT JOIN store_hand_on_area a on c.hand_on_area =a.id and a.hand_type='1'
+      		LEFT JOIN store_hand_on_no n on c.hand_on_no =n.id and n.hand_type='1'
+	      	LEFT JOIN store_clothes_flow cf on c.id =cf.clothes_id and cf.clothes_status='15'
+      		LEFT JOIN store_hand_on_area fa on c.factory_hand_on_area =fa.id and fa.hand_type='2'
+      		LEFT JOIN store_hand_on_no fn on c.factory_hand_on_no =fn.id and fn.hand_type='2'
+	      	LEFT JOIN store_clothes_flow cf1 on c.id =cf1.clothes_id and cf1.clothes_status='16'
+	      		
+      		LEFT JOIN send_washing_detail wd on c.id =wd.clothes_id
+			LEFT JOIN send_washing w on w.send_number =wd.send_number
+			LEFT JOIN leave_factory_detail fd on c.id =fd.clothes_id
+			LEFT JOIN leave_factory lf on fd.leave_factory_number =lf.leave_factory_number
+		 where 1=1 
+			<if test="barCode != null and barCode != ''">
+				 and c.bar_code = #{barCode}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				 and c.store_id = #{storeId}
+			</if>
+			
+			<if test="status != null and status != ''">
+				 and c.status = #{status}
+			</if>
+			
+			<if test="orderCode != null and orderCode != ''">
+				 and c.order_code = #{orderCode}
+			</if>
+			
+			<if test="queryKey != null and queryKey != ''">
+				 and (c.member_id = #{queryKey} || c.mobile_phone =#{queryKey}) 
+			</if>
+			
+			order by c.create_date desc
+	</select>
+	
+	
+	
+	<!-- 分页查询  -->
+	<select id="findClothesCommon" parameterType="StoreClothes" resultMap="BaseResultMap">
+		 select
+		 c.id,
+		c.order_code,
+		c.bar_code,
+		c.urgency,
+		c.member_id,
+		c.card_number,
+		c.service_type,
+		c.attachment,
+		c.flaw,
+		c.mobile_phone,
+		c.telephone,
+		
+		c.price,
+		c.status,
+		c.service_fee,
+		c.create_date,
+		c.create_user_id,
+		c.create_user_name,
+		c.update_date,
+		c.update_user_name,
+		c.update_user_id,
+		c.store_id,
+		s.store_name,
+		c.factory_hand_on_area as factoryHandOnArea,
+		c.factory_hand_on_no as factoryHandOnNo,
+		o.clothes_count
+		
+		 from store_clothes c
+			LEFT JOIN store s on c.store_id =s.id
+			LEFT JOIN store_order o on c.order_code =o.order_code
+		 where 1=1 
+			<if test="barCode != null and barCode != ''">
+				 and c.bar_code = #{barCode}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				 and c.store_id = #{storeId}
+			</if>
+			
+			<if test="status != null and status != ''">
+				 and c.status = #{status}
+			</if>
+			
+			<if test="orderCode != null and orderCode != ''">
+				 and c.order_code = #{orderCode}
+			</if>
+			
+			<if test="queryKey != null and queryKey != ''">
+				 and (c.member_id = #{queryKey} || c.mobile_phone =#{queryKey}) 
+			</if>
+			
+			order by c.create_date desc
+	</select>
+	
+	
+	<select id="findClothesBySendNumber" parameterType="StoreClothes" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+			from send_washing_detail wd
+			LEFT JOIN send_washing w ON wd.send_number = w.send_number
+			LEFT JOIN store_clothes c ON wd.clothes_id = c.id
+			
+			LEFT JOIN store_hand_on_area a on c.hand_on_area =a.id and a.hand_type='1'
+	      	LEFT JOIN store_hand_on_no n on c.hand_on_no =n.id and n.hand_type='1'
+	      		
+      		LEFT JOIN store_hand_on_area fa on c.factory_hand_on_area =fa.id and fa.hand_type='2'
+      		LEFT JOIN store_hand_on_no fn on c.factory_hand_on_no =fn.id and fn.hand_type='2'
+			
+			LEFT JOIN store_order o on c.order_code =o.order_code
+			LEFT JOIN leave_factory_detail fd on c.id =fd.clothes_id
+			LEFT JOIN leave_factory lf on fd.leave_factory_number =lf.leave_factory_number
+			LEFT JOIN store_clothes_flow cf on c.id =cf.clothes_id and cf.clothes_status='15'
+	      	LEFT JOIN store_clothes_flow cf1 on c.id =cf.clothes_id and cf1.clothes_status='16'
+			LEFT JOIN store s ON c.store_id = s.id
+			LEFT JOIN store_data_dictionary d ON c.clothes_name = d.id
+			LEFT JOIN store_data_dictionary d1 ON c.color = d1.id
+			LEFT JOIN store_data_dictionary d2 ON c.brand = d2.id
+			LEFT JOIN store_data_dictionary d3 ON c.flaw = d3.id
+			LEFT JOIN member m ON c.member_id = m.id
+		 where 1=1 
+			<if test="barCode != null and barCode != ''">
+				 and c.bar_code = #{barCode}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				 and c.store_id = #{storeId}
+			</if>
+			
+			<if test="status != null and status != ''">
+				 and c.status = #{status}
+			</if>
+			
+			<if test="sendNumber != null and sendNumber != ''">
+				 and wd.send_number = #{sendNumber}
+			</if>
+			<if test="queryKey != null and queryKey != ''">
+				 and (c.member_id = #{queryKey} || c.mobile_phone =#{queryKey}) 
+			</if>
+			
+			order by c.create_date desc
+	</select>
+	
+	
+	<select id="clothesStatistics" parameterType="FactoryStatisticsVo" resultMap="BaseResultMap">
+			SELECT 
+		    	c.id,
+				c.order_code,
+				c.bar_code,
+				c.urgency,
+				c.member_id,
+				m.name as member_name,
+				c.card_number,
+				d.data_name as clothes_name,
+				c.service_type,
+				d1.data_name as color,
+				d2.data_name as brand,
+				c.mobile_phone,
+				c.telephone,
+				c.price,
+				c.clothes_status as status,
+				c.service_fee,
+				c.create_date,
+				c.create_user_id,
+				c.create_user_name,
+				c.update_date,
+				c.update_user_name,
+				c.update_user_id,
+				c.store_id,
+				s.store_name
+		 from (
+			SELECT sc.*,scf.opt_user_id as opt_user_id,sc.status as clothes_status from store_clothes_flow scf 
+		  INNER JOIN store_clothes sc on scf.clothes_id =sc.id
+			where scf.clothes_status=#{clothesStatus}
+		) c 
+		LEFT JOIN store s on c.store_id =s.id
+		LEFT JOIN store_order o on c.order_code =o.order_code
+		LEFT JOIN member m on c.member_id =m.id
+		LEFT JOIN store_data_dictionary d on c.clothes_name =d.id
+		LEFT JOIN store_data_dictionary d1 on c.color =d1.id
+		LEFT JOIN store_data_dictionary d2 on c.brand =d2.id
+		where 1=1
+		<if test="userId != null and userId != ''">
+				and c.opt_user_id = #{userId}
+		</if>
+		
+		<if test="barCode != null and barCode != ''">
+				and c.bar_code = #{barCode}
+		</if>
+		order by c.create_date desc
+	</select>
+
+
+	<select id="queryO2oOutFactoryOrder" parameterType="map" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_clothes c
+		    INNER JOIN (SELECT o.* from store_order o where o.order_status='5' and o.order_type=#{orderType}) o on c.order_code =o.order_code
+			LEFT JOIN store s on c.store_id =s.id
+			LEFT JOIN store_data_dictionary d on c.clothes_name =d.id
+			LEFT JOIN store_data_dictionary d1 on c.color =d1.id
+			LEFT JOIN store_data_dictionary d2 on c.brand =d2.id
+			LEFT JOIN member m on c.member_id =m.id
+			
+			LEFT JOIN store_hand_on_area a on c.hand_on_area =a.id and a.hand_type='1'
+      		LEFT JOIN store_hand_on_no n on c.hand_on_no =n.id and n.hand_type='1'
+	      	LEFT JOIN store_clothes_flow cf on c.id =cf.clothes_id and cf.clothes_status='15'
+      		LEFT JOIN store_hand_on_area fa on c.factory_hand_on_area =fa.id and fa.hand_type=CASE WHEN o.app_id = 'wx614b63f73b55d7ef' THEN '3'  WHEN o.app_id = 'wxc6097b5bf9ba801d' THEN '4'  ELSE '2' END  
+      		LEFT JOIN store_hand_on_no fn on c.factory_hand_on_no =fn.id and fn.hand_type=CASE WHEN o.app_id = 'wx614b63f73b55d7ef' THEN '3'  WHEN o.app_id = 'wxc6097b5bf9ba801d' THEN '4'  ELSE '2' END  
+	      	LEFT JOIN store_clothes_flow cf1 on c.id =cf1.clothes_id and cf1.clothes_status='16'
+	      		
+      		LEFT JOIN send_washing_detail wd on c.id =wd.clothes_id
+			LEFT JOIN send_washing w on w.send_number =wd.send_number
+			LEFT JOIN leave_factory_detail fd on c.id =fd.clothes_id
+			LEFT JOIN leave_factory lf on fd.leave_factory_number =lf.leave_factory_number
+		 where 1=1 
+			
+			<if test="clothesStatus != null and clothesStatus != ''">
+				 and c.status = #{clothesStatus}
+			</if>
+			order by c.create_date desc
+	</select>
+	
+</mapper>

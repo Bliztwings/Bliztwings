@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.CardOperatorRecordDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="CardOperatorRecord">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="card_num" jdbcType="VARCHAR" property="cardNum" />
+		 <result column="operator_type" jdbcType="VARCHAR" property="operatorType" />
+		 <result column="status" jdbcType="VARCHAR" property="status" />
+		 <result column="approver" jdbcType="VARCHAR" property="approver" />
+		 <result column="approved_time" jdbcType="TIMESTAMP" property="approvedTime" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		 <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		 <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		 <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id, card_id, store_id, card_num, operator_type, status, approver, approved_time, create_time, create_user, update_time, update_user, is_deleted
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from card_operator_record
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from card_operator_record
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="CardOperatorRecord">
+		 insert into card_operator_record
+ 		(id,card_id,store_id,card_num,operator_type,status,approver,approved_time,create_time,create_user,update_time,update_user,is_deleted) 
+		 values 
+ 		(#{id},#{cardId},#{storeId},#{cardNum},#{operatorType},#{status},#{approver},#{approvedTime},#{createTime},#{createUser},#{updateTime},#{updateUser},#{isDeleted}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="CardOperatorRecord">
+		 update card_operator_record
+ 		 <set> 
+			<if test="cardId != null and cardId != ''">
+				 card_id = #{cardId},
+			</if>
+			<if test="storeId != null and storeId != ''">
+				 store_id = #{storeId},
+			</if>
+			<if test="cardNum != null and cardNum != ''">
+				 card_num = #{cardNum},
+			</if>
+			<if test="operatorType != null and operatorType != ''">
+				 operator_type = #{operatorType},
+			</if>
+			<if test="status != null and status != ''">
+				 status = #{status},
+			</if>
+			<if test="approver != null and approver != ''">
+				 approver = #{approver},
+			</if>
+			<if test="approvedTime != null and approvedTime != ''">
+				 approved_time = #{approvedTime},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				 create_time = #{createTime},
+			</if>
+			<if test="createUser != null and createUser != ''">
+				 create_user = #{createUser},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				 update_user = #{updateUser},
+			</if>
+			<if test="isDeleted != null and isDeleted != ''">
+				 is_deleted = #{isDeleted},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="CardOperatorRecord" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from card_operator_record
+		 where 1=1 
+			<if test="cardId != null and cardId != ''">
+				 and card_id = #{cardId}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				 and store_id = #{storeId}
+			</if>
+			<if test="cardNum != null and cardNum != ''">
+				 and card_num = #{cardNum}
+			</if>
+			<if test="operatorType != null and operatorType != ''">
+				 and operator_type = #{operatorType}
+			</if>
+			<if test="status != null and status != ''">
+				 and status = #{status}
+			</if>
+			<if test="approver != null and approver != ''">
+				 and approver = #{approver}
+			</if>
+			<if test="approvedTime != null and approvedTime != ''">
+				 and approved_time = #{approvedTime}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				 and create_time = #{createTime}
+			</if>
+			<if test="createUser != null and createUser != ''">
+				 and create_user = #{createUser}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 and update_time = #{updateTime}
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				 and update_user = #{updateUser}
+			</if>
+			<if test="isDeleted != null and isDeleted != ''">
+				 and is_deleted = #{isDeleted}
+			</if>
+	</select>
+
+</mapper>

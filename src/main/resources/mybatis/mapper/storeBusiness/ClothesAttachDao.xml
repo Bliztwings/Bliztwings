@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.ClothesAttachDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="ClothesAttach">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="clothes_id" jdbcType="VARCHAR" property="clothesId" />
+		 <result column="clothes_bar_code" jdbcType="VARCHAR" property="clothesBarCode" />
+		 <result column="attach_bar_code" jdbcType="VARCHAR" property="attachBarCode" />
+		 <result column="attach_id" jdbcType="VARCHAR" property="attachId" />
+		 <result column="data_name" jdbcType="VARCHAR" property="attachName" />
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+			a.id, a.clothes_id, a.clothes_bar_code, a.attach_bar_code, a.attach_id,d.data_name
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from clothes_attach a
+		 left join store_data_dictionary d on d.id=a.attach_id
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from clothes_attach
+		 where id = #{id}
+	</delete>
+	
+	<delete id="deleteAttachByClothesId" parameterType="String">
+		 delete from clothes_attach
+		 where clothes_id = #{id}
+	</delete>
+	
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+	insert into clothes_attach
+	(id,
+	clothes_id,
+	clothes_bar_code,
+	attach_bar_code,
+	attach_id)
+	values
+	(#{id},#{clothesId},#{clothesBarCode},#{attachBarCode},#{attachId})
+</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="ClothesAttach">
+		 update clothes_attach
+ 		 <set> 
+			<if test="clothesBarCode != null and clothesBarCode != ''">
+				 clothes_bar_code = #{clothesBarCode},
+			</if>
+			
+			<if test="attachBarCode != null and attachBarCode != ''">
+				 attach_bar_code = #{attachBarCode},
+			</if>
+ 		 </set>
+		 where attach_id = #{attachId}
+	</update>
+
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="ClothesAttach" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+			from clothes_attach a
+		    left join store_data_dictionary d on d.id=a.attach_id
+		 	where 1=1 
+			<if test="clothesId != null and clothesId != ''">
+				 and clothes_id = #{clothesId}
+			</if>
+			
+			<if test="attachBarCode != null and attachBarCode != ''">
+				 and attach_bar_code = #{attachBarCode}
+			</if>
+	</select>
+
+</mapper>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.SendReceivePersonDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="SendReceivePerson">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="e_name" jdbcType="VARCHAR" property="name" />
+		 <result column="e_password" jdbcType="VARCHAR" property="password" />
+		 <result column="e_mobile" jdbcType="VARCHAR" property="mobile" />
+		 <result column="e_address" jdbcType="VARCHAR" property="address" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		 <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+		 <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		 <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		 <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+		 <result column="remark" jdbcType="VARCHAR" property="remark" />
+		 
+		 <result column="last_login_time" jdbcType="VARCHAR" property="lastLoginTime" />
+		 <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+		 <result column="user_type" jdbcType="VARCHAR" property="userType" />
+		 <result column="platform_type" jdbcType="VARCHAR" property="platformType" />
+		 
+		 
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id,
+		 e_name,
+		 e_password,
+		 e_mobile,
+		 e_address,
+		 create_time,
+		 create_user,
+		 create_user_id,
+		 update_user,
+		 update_time,
+		 update_user_id,
+		 remark,
+		 last_login_time,
+		 device_id,
+		 user_type,
+		 platform_type
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from send_receive_person
+		 where id = #{id}
+	</select>
+	
+
+	<select id="queryXiaoE" parameterType="SendReceivePerson" resultMap="BaseResultMap">
+		SELECT *,SQRT(
+	
+				POW(111.2 * (latitude - #{latitude}), 2) +
+	
+				POW(111.2 * (114.547183 - #{longitude}) * COS(latitude / 57.3), 2)) AS distance
+	
+		FROM send_receive_person HAVING distance <![CDATA[ < ]]> #{distance} ORDER BY distance
+	</select>
+	
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from send_receive_person
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+	insert into send_receive_person
+	(id,
+	e_name,
+	e_password,
+	e_mobile,
+	e_address,
+	create_time,
+	create_user,
+	create_user_id,
+	update_user,
+	update_time,
+	update_user_id,
+	remark,
+	user_type,
+	platform_type)
+	values
+	(#{id},#{name},#{password},#{mobile},#{address}
+	,#{createTime},#{createUser},#{createUserId},#{updateUser},#{updateTime},#{updateUserId},#{remark},#{userType},#{platformType}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="SendReceivePerson">
+		 update send_receive_person
+ 		 <set> 
+ 		 	<if test="mobile != null and mobile != ''">
+				 e_mobile = #{mobile},
+			</if>
+			
+			<if test="name != null and name != ''">
+				 e_name = #{name},
+			</if>
+			
+			<if test="address != null and address != ''">
+				 e_address = #{address},
+			</if>
+			
+			<if test="updateUser != null and updateUser != ''">
+				 update_user = #{updateUser},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			
+			<if test="updateUserId != null and updateUserId != ''">
+				 update_user_id = #{updateUserId},
+			</if>
+			
+			<if test="lastLoginTime != null and lastLoginTime != ''">
+				 last_login_time = #{lastLoginTime},
+			</if>
+			
+			<if test="deviceId != null and deviceId != ''">
+				 device_id = #{deviceId},
+			</if>
+			<if test="longitude != null">
+				 longitude = #{longitude},
+			</if>
+			
+			<if test="latitude != null">
+				 latitude = #{latitude},
+			</if>
+			
+			<if test="token != null and token != ''">
+				 token = #{token},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+	
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="SendReceivePerson" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from send_receive_person
+		 where 1=1 
+			<if test="name != null and name != ''">
+				 and e_name = #{name}
+			</if>
+			
+			<if test="mobile != null and mobile != ''">
+				 and e_mobile = #{mobile}
+			</if>
+			
+			<if test="userType != null and userType != ''">
+				 and user_type = #{userType}
+			</if>
+			
+			<if test="platformType != null and platformType != ''">
+				 and platform_type = #{platformType}
+			</if>
+			order by create_time desc
+	</select>
+	
+	
+	<!-- 查询 手机+密码获取 -->
+	<select id="getByMbileAndPwd" parameterType="SendReceivePerson" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" /> from send_receive_person 
+		 where e_mobile = #{mobile} and e_password=#{password} 
+	</select>
+	
+	<!-- 根据token获取会员信息 -->
+	<select id="getByToken" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" /> from send_receive_person 
+		 where token=#{token}
+	</select>
+	
+</mapper>

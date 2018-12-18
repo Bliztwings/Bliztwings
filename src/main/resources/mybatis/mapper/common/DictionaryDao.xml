@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.DictionaryDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="Dictionary">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="name" jdbcType="VARCHAR" property="name" />
+		 <result column="value" jdbcType="VARCHAR" property="value" />
+		 <result column="extend1" jdbcType="VARCHAR" property="extend1" />
+		 <result column="extend2" jdbcType="VARCHAR" property="extend2" />
+		 <result column="extend3" jdbcType="VARCHAR" property="extend3" />
+		 <result column="extend4" jdbcType="VARCHAR" property="extend4" />
+		 <result column="extend5" jdbcType="VARCHAR" property="extend5" />
+		 <result column="sort" jdbcType="INTEGER" property="sort" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		 <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		 <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		 <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
+		 <result column="code" jdbcType="VARCHAR" property="code" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id, name, value, extend1, extend2, extend3, extend4, extend5, sort, create_time, create_user, update_time, update_user, is_deleted,code
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from dictionary
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from dictionary
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="Dictionary">
+		 insert into dictionary
+ 		(id,name,value,extend1,extend2,extend3,extend4,extend5,sort,create_time,create_user,update_time,update_user,is_deleted,code) 
+		 values 
+ 		(#{id},#{name},#{value},#{extend1},#{extend2},#{extend3},#{extend4},#{extend5},#{sort},#{createTime},#{createUser},#{updateTime},#{updateUser},#{isDeleted},#{code}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="Dictionary">
+		 update dictionary
+ 		 <set> 
+			<if test="name != null and name != ''">
+				 name = #{name},
+			</if>
+			<if test="value != null and value != ''">
+				 value = #{value},
+			</if>
+			<if test="extend1 != null and extend1 != ''">
+				 extend1 = #{extend1},
+			</if>
+			<if test="extend2 != null and extend2 != ''">
+				 extend2 = #{extend2},
+			</if>
+			<if test="extend3 != null and extend3 != ''">
+				 extend3 = #{extend3},
+			</if>
+			<if test="extend4 != null and extend4 != ''">
+				 extend4 = #{extend4},
+			</if>
+			<if test="extend5 != null and extend5 != ''">
+				 extend5 = #{extend5},
+			</if>
+			<if test="sort != null and sort != ''">
+				 sort = #{sort},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				 create_time = #{createTime},
+			</if>
+			<if test="createUser != null and createUser != ''">
+				 create_user = #{createUser},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				 update_user = #{updateUser},
+			</if>
+			<if test="isDeleted != null and isDeleted != ''">
+				 is_deleted = #{isDeleted},
+			</if>
+			<if test="code != null and code != ''">
+				 code = #{code},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="Dictionary" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from dictionary
+		 where 1=1 
+			<if test="name != null and name != ''">
+				 and name = #{name}
+			</if>
+			<if test="value != null and value != ''">
+				 and value = #{value}
+			</if>
+			<if test="extend1 != null and extend1 != ''">
+				 and extend1 = #{extend1}
+			</if>
+			<if test="extend2 != null and extend2 != ''">
+				 and extend2 = #{extend2}
+			</if>
+			<if test="extend3 != null and extend3 != ''">
+				 and extend3 = #{extend3}
+			</if>
+			<if test="extend4 != null and extend4 != ''">
+				 and extend4 = #{extend4}
+			</if>
+			<if test="extend5 != null and extend5 != ''">
+				 and extend5 = #{extend5}
+			</if>
+			<if test="sort != null and sort != ''">
+				 and sort = #{sort}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				 and create_time = #{createTime}
+			</if>
+			<if test="createUser != null and createUser != ''">
+				 and create_user = #{createUser}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 and update_time = #{updateTime}
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				 and update_user = #{updateUser}
+			</if>
+			<if test="isDeleted != null and isDeleted != ''">
+				 and is_deleted = #{isDeleted}
+			</if>
+			<if test="code != null and code != ''">
+				 and code = #{code}
+			</if>
+	</select>
+
+</mapper>

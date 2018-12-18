@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.CardApplyRecordDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="CardApplyRecord">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="card_supplier" jdbcType="VARCHAR" property="cardSupplier" />
+		 <result column="werehose_number" jdbcType="VARCHAR" property="werehoseNumber" />
+		 <result column="werehose_time" jdbcType="TIMESTAMP" property="werehoseTime" />
+		 <result column="apply_number" jdbcType="INTEGER" property="applyNumber" />
+		 <result column="approved_number" jdbcType="INTEGER" property="approvedNumber" />
+		 <result column="number_begin" jdbcType="VARCHAR" property="numberBegin" />
+		 <result column="number_end" jdbcType="VARCHAR" property="numberEnd" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="applyer" jdbcType="VARCHAR" property="applyer" />
+		 <result column="remark" jdbcType="VARCHAR" property="remark" />
+		 <result column="status" jdbcType="VARCHAR" property="status" />
+		 <result column="approver" jdbcType="VARCHAR" property="approver" />
+		 <result column="approved_time" jdbcType="TIMESTAMP" property="approvedTime" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		 <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		 <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		 <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
+		 <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+		 <result column="approved_remark" jdbcType="VARCHAR" property="approvedRemark" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 r.id, r.card_supplier, r.werehose_number, r.werehose_time, r.apply_number, r.approved_number, r.number_begin, r.number_end, r.store_id, r.applyer, r.remark, r.status, r.approver, r.approved_time, r.create_time, r.create_user, r.update_time, r.update_user, r.is_deleted,r.approved_remark,s.store_name 
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from card_apply_record r left join store s on r.store_id=s.id 
+		 where r.id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from card_apply_record
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="CardApplyRecord">
+		 insert into card_apply_record
+ 		(id,card_supplier,werehose_number,werehose_time,apply_number,approved_number,number_begin,number_end,store_id,applyer,remark,status,approver,approved_time,create_time,create_user,update_time,update_user,is_deleted,approved_remark) 
+		 values 
+ 		(#{id},#{cardSupplier},#{werehoseNumber},#{werehoseTime},#{applyNumber},#{approvedNumber},#{numberBegin},#{numberEnd},#{storeId},#{applyer},#{remark},#{status},#{approver},#{approvedTime},#{createTime},#{createUser},#{updateTime},#{updateUser},#{isDeleted},#{approvedRemark}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="CardApplyRecord">
+		 update card_apply_record
+ 		 <set> 
+			<if test="werehoseNumber != null and werehoseNumber != ''">
+				 werehose_number = #{werehoseNumber},
+			</if>
+			<if test="werehoseTime != null and werehoseTime != ''">
+				 werehose_time = #{werehoseTime},
+			</if>
+			<if test="numberBegin != null and numberBegin != ''">
+				 number_begin = #{numberBegin},
+			</if>
+			<if test="numberEnd != null and numberEnd != ''">
+				 number_end = #{numberEnd},
+			</if>
+			<if test="remark != null and remark != ''">
+				 remark = #{remark},
+			</if>
+			<if test="status != null and status != ''">
+				 status = #{status},
+			</if>
+			<if test="approver != null and approver != ''">
+				 approver = #{approver},
+			</if>
+			<if test="approvedTime != null and approvedTime != ''">
+				 approved_time = #{approvedTime},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				 update_user = #{updateUser},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="CardApplyRecord" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from card_apply_record r left join store s on r.store_id=s.id 
+		 where 1=1 
+			<if test="storeId != null and storeId != ''">
+				 and r.store_id = #{storeId}
+			</if>
+			<if test="applyer != null and applyer != ''">
+				 and r.applyer = #{applyer}
+			</if>
+			<if test="status != null and status != ''">
+				 and r.status = #{status}
+			</if>
+			<if test="createTimeBegin != null">
+				 and r.create_time >= #{createTimeBegin,jdbcType=TIMESTAMP}
+			</if>
+			<if test="createTimeEnd != null">
+				<![CDATA[ and r.create_time <= #{createTimeEnd,jdbcType=TIMESTAMP} ]]>
+			</if>
+	</select>
+	
+	<select id="validateCardNumber" parameterType="CardApplyRecord" resultType="int">
+		select count(1) from member_card where card_number in 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+		  #{item}  
+		</foreach>
+	</select>
+
+	
+	<!-- 修改  -->
+	<update id="doApproved" parameterType="CardApplyRecord">
+		 update card_apply_record
+ 		 <set> 
+			<if test="approvedRemark != null and approvedRemark != ''">
+				 approved_remark = #{approvedRemark},
+			</if>
+			<if test="status != null and status != ''">
+				 status = #{status},
+			</if>
+			<if test="approver != null and approver != ''">
+				 approver = #{approver},
+			</if>
+			<if test="approvedTime != null and approvedTime != ''">
+				 approved_time = #{approvedTime,jdbcType=TIMESTAMP},
+			</if>
+ 		 </set>
+		 where id = #{id} and status='un_approved'
+	</update>
+
+</mapper>

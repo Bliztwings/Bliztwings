@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.MemberReceiveAddressDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="MemberReceiveAddress">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="member_id" jdbcType="VARCHAR" property="memberId" />
+		 <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+		 <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+		 <result column="home_address" jdbcType="VARCHAR" property="homeAddress" />
+		 <result column="door_number" jdbcType="VARCHAR" property="doorNumber" />
+		 <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+		 <result column="sex" jdbcType="VARCHAR" property="sex" />
+		 <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		 <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		 <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		 <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id, member_id, area_code, area_name, home_address, door_number, customer_name, sex, telephone, create_time, create_user, update_time, update_user, is_deleted
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from member_receive_address
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from member_receive_address
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="MemberReceiveAddress">
+		 insert into member_receive_address
+ 		(id,member_id,area_code,area_name,home_address,door_number,customer_name,sex,telephone,create_time,create_user,update_time,update_user,is_deleted) 
+		 values 
+ 		(#{id},#{memberId},#{areaCode},#{areaName},#{homeAddress},#{doorNumber},#{customerName},#{sex},#{telephone},#{createTime},#{createUser},#{updateTime},#{updateUser},#{isDeleted}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="MemberReceiveAddress">
+		 update member_receive_address
+ 		 <set> 
+			<if test="areaCode != null and areaCode != ''">
+				 area_code = #{areaCode},
+			</if>
+			<if test="areaName != null and areaName != ''">
+				 area_name = #{areaName},
+			</if>
+			<if test="homeAddress != null and homeAddress != ''">
+				 home_address = #{homeAddress},
+			</if>
+			<if test="doorNumber != null and doorNumber != ''">
+				 door_number = #{doorNumber},
+			</if>
+			<if test="customerName != null and customerName != ''">
+				 customer_name = #{customerName},
+			</if>
+			<if test="sex != null and sex != ''">
+				 sex = #{sex},
+			</if>
+			<if test="telephone != null and telephone != ''">
+				 telephone = #{telephone},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="MemberReceiveAddress" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from member_receive_address
+		 where 1=1 
+			<if test="memberId != null and memberId != ''">
+				 and member_id = #{memberId}
+			</if>
+			<if test="customerName != null and customerName != ''">
+				 and customer_name = #{customerName}
+			</if>
+			<if test="telephone != null and telephone != ''">
+				 and telephone = #{telephone}
+			</if>
+	</select>
+
+</mapper>

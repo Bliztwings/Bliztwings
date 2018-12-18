@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.OrderPayRecordDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="OrderPayRecord">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+		 <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+		 <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+		 <result column="pay_type" jdbcType="VARCHAR" property="payType" />
+		 <result column="member_name" jdbcType="VARCHAR" property="memberName" />
+		 <result column="member_id" jdbcType="VARCHAR" property="memberId" />
+		 <result column="card_number" jdbcType="VARCHAR" property="cardNumber" />
+		 <result column="order_amount" jdbcType="VARCHAR" property="orderAmount" />
+		 <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
+		 <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+			p.id,
+			p.order_code,
+			s.store_name,
+			p.order_id,
+			p.order_type,
+			p.pay_type,
+			p.member_name,
+			p.member_id,
+			p.card_number,
+			p.order_amount,
+			p.pay_date,
+			p.mobile_phone,
+			s.id as store_id
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from order_pay_record  p
+		 left join store s on p.store_id =s.id
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from order_pay_record
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+	insert into order_pay_record
+	(id,order_id,store_id,order_code,order_type,pay_type,member_id,member_name,mobile_phone,card_number,order_amount,pay_date)
+	values
+	(#{id},#{orderId},#{storeId},#{orderCode},#{orderType},#{payType},#{memberId},#{memberName},#{mobilePhone},#{cardNumber},#{orderAmount},#{payDate})
+</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="ClothesFlow">
+		 update order_pay_record
+ 		 <set> 
+			<if test="memberName != null and memberName != ''">
+				 member_name = #{memberName},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="ClothesFlow" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+			from order_pay_record p
+			left join member m on p.member_id =m.id
+			left join store_order o on p.order_code =o.order_code
+			left join store s on p.store_id =s.id
+		 	where 1=1 
+			<if test="memberName != null and memberName != ''">
+				 and p.member_name = #{memberName}
+			</if>
+			
+			<if test="mobilePhone != null and mobilePhone != ''">
+				 and p.mobile_phone = #{mobilePhone}
+			</if>
+			
+			<if test="beginDate!=null and beginDate!=''">
+    			<![CDATA[ and DATE_FORMAT(p.pay_date, '%Y-%m-%d')>=  DATE_FORMAT(#{beginDate}, '%Y-%m-%d')   ]]>
+			</if>
+			
+			<if test="endDate!=null and endDate!=''">
+    			<![CDATA[ and DATE_FORMAT(p.pay_date, '%Y-%m-%d')<=  DATE_FORMAT(#{endDate}, '%Y-%m-%d')   ]]>
+			</if>
+			
+			order by p.pay_date asc
+	</select>
+
+</mapper>

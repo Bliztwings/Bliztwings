@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.EwashingHandonAreaDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="HandOnArea">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+		 <result column="area" jdbcType="VARCHAR" property="handOnArea" />
+		 <result column="hand_type" jdbcType="VARCHAR" property="handType" />
+		 <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		 <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		 <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+		 <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+		 <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+		 <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+	a.id ,a.store_id,a.area,a.create_date,a.create_user_id,a.update_user_id,
+	a.create_user_name,a.update_date,a.update_user_name,a.hand_type,s.store_name
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_hand_on_area a
+		 left join store s on a.store_id =s.id
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from store_hand_on_area
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+		 insert into store_hand_on_area
+ 		(id ,store_id ,area,create_date,create_user_name,create_user_id,hand_type) 
+		 values 
+ 		(#{id},#{storeId},#{handOnArea},#{createDate},#{createUserName},#{createUserId},#{handType}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="HandOnArea">
+		 update store_hand_on_area
+ 		 <set> 
+			<if test="handOnArea != null and handOnArea != ''">
+				 area = #{handOnArea},
+			</if>
+			
+			<if test="updateDate != null and updateDate != ''">
+				 update_date = #{updateDate},
+			</if>
+			
+			<if test="updateUserName != null and updateUserName != ''">
+				 update_user_name = #{updateUserName},
+			</if>
+			
+			<if test="updateUserId != null and updateUserId != ''">
+				 update_user_id = #{updateUserId},
+			</if>
+			
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="HandOnArea" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_hand_on_area a 
+		 left join store s on a.store_id =s.id
+		 where 1=1 
+			<if test="handOnArea != null and handOnArea != ''">
+				 and a.area = #{handOnArea}
+			</if>
+			
+			<if test="handType != null and handType != ''">
+				 and a.hand_type = #{handType}
+			</if>
+			
+			<if test="storeId != null and storeId != ''">
+				 and a.store_id = #{storeId}
+			</if>
+	</select>
+
+</mapper>

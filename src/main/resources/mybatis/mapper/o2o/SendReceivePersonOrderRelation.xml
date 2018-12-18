@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.SendReceivePersonOrderRelationDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="SendReceivePersonOrderRelation">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="send_receive_person_id" jdbcType="VARCHAR" property="sendReceivePersonId" />
+		 <result column="distribute_date" jdbcType="TIMESTAMP" property="distributeDate" />
+		 <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+		 <result column="distribute_user_id" jdbcType="VARCHAR" property="distributeUserId" />
+		 <result column="distribute_user" jdbcType="VARCHAR" property="distributeUser" />
+		 <result column="accept_status" jdbcType="VARCHAR" property="acceptStatus" />
+		 <result column="task_status" jdbcType="VARCHAR" property="taskStatus" />
+		 <result column="app_id" jdbcType="VARCHAR" property="appId" />
+		 <result column="distribute_type" jdbcType="VARCHAR" property="distributeType" />
+		 
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id,
+		 send_receive_person_id,
+		 distribute_date,
+		 order_id,
+		 distribute_user_id,
+		 distribute_user,
+		 accept_status,
+		 task_status,
+		 distribute_type,
+		 app_id
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from send_receive_person_order_relation
+		 where id = #{id}
+	</select>
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from send_receive_person_order_relation
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+	insert into send_receive_person_order_relation
+	(id,
+		 send_receive_person_id,
+		 distribute_date,
+		 order_id,
+		 distribute_user_id,
+		 distribute_user,
+		 accept_status,
+		 task_status,
+		 app_id,
+		 distribute_type)
+	values
+	(#{id},#{sendReceivePersonId},#{distributeDate},#{orderId},#{distributeUserId},#{distributeUser},#{acceptStatus},#{taskStatus},#{appId},#{distributeType}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="SendReceivePersonOrderRelation">
+		 update send_receive_person_order_relation
+ 		 <set> 
+ 		 	<if test="distributeDate != null and distributeDate != ''">
+				 distribute_date = #{distributeDate},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+	
+	<update id="updatSendReceivePersonOrderRelation" parameterType="SendReceivePersonOrderRelation">
+		 update send_receive_person_order_relation
+ 		 <set> 
+			
+			<if test="acceptStatus != null and acceptStatus != ''">
+				 accept_status = #{acceptStatus},
+			</if>
+			
+			<if test="taskStatus != null and taskStatus != ''">
+				 task_status = #{taskStatus},
+			</if>
+ 		 </set>
+		 where order_id = #{orderId} and distribute_type =#{distributeType}
+	</update>
+	
+	
+	<select id="queryIncome"  resultType="SendUserIncomeVo" parameterType="SendUserIncomeVo">
+		SELECT sum(v.paid_amount) as sumAmount,v.app_id as appId
+			from (
+				SELECT s.paid_amount,t.app_id 
+			  from store_order s 
+				INNER JOIN (
+					SELECT r.order_id ,r.app_id 
+					from send_receive_person_order_relation  r
+					where r.task_status =#{taskStatus} and r.accept_status='2' 
+					and r.send_receive_person_id=#{sendUserId}
+				  <![CDATA[ and r.distribute_date >= str_to_date(#{startDate},'%Y-%m-%d %H:%i:%s') ]]> 
+				  <![CDATA[ and r.distribute_date <= str_to_date(#{endDate},'%Y-%m-%d %H:%i:%s') ]]> 
+				) t on s.id =t.order_id 
+			  where s.pay_status='1'
+	
+		) v 
+		where v.app_id =#{appId}
+		GROUP BY v.app_id
+	</select>
+	
+	<update id="updatSendReceivePersonOrder" parameterType="SendReceivePersonOrderRelation">
+		 update send_receive_person_order_relation
+ 		 <set> 
+			<if test="taskStatus != null and taskStatus != ''">
+				 task_status = #{taskStatus},
+			</if>
+ 		 </set>
+		 where order_id = #{orderId} and distribute_type =#{distributeType}
+	</update>
+	
+	
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="SendReceivePersonOrderRelation" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from send_receive_person_order_relation
+		 where 1=1 
+			<if test="sendReceivePersonId != null and sendReceivePersonId != ''">
+				 and send_receive_person_id = #{sendReceivePersonId}
+			</if>
+			
+			order by distribute_date desc
+	</select>
+	
+	<select id="findRevokeList" parameterType="SendReceivePersonOrderRelation" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from send_receive_person_order_relation
+		 where order_id = #{orderId} and distribute_type =#{distributeType} and accept_status = #{acceptStatus}
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.MemberCardFlowingDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="MemberCardFlowing">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="card_id" jdbcType="VARCHAR" property="cardId" />
+		 <result column="card_num" jdbcType="VARCHAR" property="cardNum" />
+		 <result column="cash_amount_before" jdbcType="DECIMAL" property="cashAmountBefore" />
+		 <result column="cash_amount_oper" jdbcType="DECIMAL" property="cashAmountOper" />
+		 <result column="cash_amount_after" jdbcType="DECIMAL" property="cashAmountAfter" />
+		 <result column="gived_amount_before" jdbcType="DECIMAL" property="givedAmountBefore" />
+		 <result column="gived_amount_oper" jdbcType="DECIMAL" property="givedAmountOper" />
+		 <result column="gived_amount_after" jdbcType="DECIMAL" property="givedAmountAfter" />
+		 <result column="oper_type" jdbcType="VARCHAR" property="operType" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		 <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		 <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		 <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
+		 <result column="payed_method" jdbcType="VARCHAR" property="payedMethod" />
+		 <result column="source_id" jdbcType="VARCHAR" property="sourceId" />
+		 <result column="remark" jdbcType="VARCHAR" property="remark" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id, store_id, card_id, card_num, cash_amount_before, cash_amount_oper, cash_amount_after, gived_amount_before, gived_amount_oper, gived_amount_after, oper_type, create_time, create_user, update_time, update_user, is_deleted,payed_method,remark,source_id 
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from member_card_flowing
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from member_card_flowing
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="MemberCardFlowing">
+		 insert into member_card_flowing
+ 		(id,payed_method,store_id,card_id,card_num,cash_amount_before,cash_amount_oper,cash_amount_after,gived_amount_before,gived_amount_oper,gived_amount_after,oper_type,create_time,create_user,update_time,update_user,is_deleted,remark,source_id) 
+		 values 
+ 		(#{id},#{payedMethod},#{storeId},#{cardId},#{cardNum},#{cashAmountBefore},#{cashAmountOper},#{cashAmountAfter},#{givedAmountBefore},#{givedAmountOper},#{givedAmountAfter},#{operType},#{createTime},#{createUser},#{updateTime},#{updateUser},#{isDeleted},#{remark},#{sourceId}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="MemberCardFlowing">
+		 update member_card_flowing
+ 		 <set> 
+			<if test="storeId != null and storeId != ''">
+				 store_id = #{storeId},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="MemberCardFlowing" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from member_card_flowing
+		 where 1=1 
+			<if test="storeId != null and storeId != ''">
+				 and store_id = #{storeId}
+			</if>
+			<if test="cardId != null and cardId != ''">
+				 and card_id = #{cardId}
+			</if>
+			<if test="cardNum != null and cardNum != ''">
+				 and card_num = #{cardNum}
+			</if>
+			<if test="operType != null and operType != ''">
+				 and oper_type = #{operType}
+			</if>
+			<if test="createUser != null and createUser != ''">
+				 and create_user = #{createUser}
+			</if>
+			 order by create_time desc
+	</select>
+
+</mapper>

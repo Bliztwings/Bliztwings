@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.EwashingStoreDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="EwashingStore">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+		 <result column="store_address" jdbcType="VARCHAR" property="storeAddress" />
+		 <result column="store_code" jdbcType="VARCHAR" property="storeCode" />
+		 <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		 <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		 <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+		 <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+		 <result column="store_status" jdbcType="VARCHAR" property="storeStatus" />
+		 <result column="store_type" jdbcType="VARCHAR" property="storeType" />
+		 <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+		 <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+		 
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id ,store_name ,store_address,store_code,create_date,create_user_name,telephone,province,city,area,update_date,update_user_name,store_status,store_type,create_user_id,update_user_id
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from store
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+		 insert into store
+ 		(id ,store_name ,store_address,store_code,create_date,create_user_name,telephone,province,city,area,update_date,update_user_name,store_status,store_type,create_user_id) 
+		 values 
+ 		(#{id},#{storeName},#{storeAddress},#{storeCode},#{createDate},#{createUserName},#{telephone},#{province},#{city},#{area},#{updateDate},#{updateUserName},#{storeStatus},#{storeType},#{createUserId}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="EwashingStore">
+		 update store
+ 		 <set> 
+			<if test="storeName != null and storeName != ''">
+				 store_name = #{storeName},
+			</if>
+			<if test="storeAddress != null and storeAddress != ''">
+				 store_address = #{storeAddress},
+			</if>
+			
+			<if test="telephone != null and telephone != ''">
+				 telephone = #{telephone},
+			</if>
+			
+			<if test="updateDate != null and updateDate != ''">
+				 update_date = #{updateDate},
+			</if>
+			
+			<if test="updateUserName != null and updateUserName != ''">
+				 update_user_name = #{updateUserName},
+			</if>
+			
+			<if test="updateUserId != null and updateUserId != ''">
+				 update_user_id = #{updateUserId},
+			</if>
+			
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="EwashingStore" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store
+		 where 1=1 
+			<if test="storeName != null and storeName != ''">
+				 and store_name = #{storeName}
+			</if>
+			<if test="storeCode != null and storeCode != ''">
+				 and store_code = #{storeCode}
+			</if>
+	</select>
+    
+    <!-- 查询 (根据门店code查询门店信息) -->
+    <select id="getEwashingStoreByStoreCode" parameterType="String" resultMap="BaseResultMap">
+         select
+         <include refid="Base_Column_List" />
+         from store
+         where store_code = #{storeCode}
+    </select>
+    
+</mapper>

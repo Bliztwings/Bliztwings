@@ -1,0 +1,32 @@
+.onmouseOver:visited {
+	background-color: #bec3f5;
+}
+
+.onmouseOver:hover {
+	background-color: #bec3f5;
+}
+
+.onmouseOver:active {
+	background-color: #bec3f5;
+}
+
+.onmouseOver{
+	background-color: #ffffff;
+}
+
+
+.payWay{
+	background-color: #71cd8b;
+}
+
+.payWay:visited {
+	background-color: #aae1b9;
+}
+
+.payWay:hover {
+	background-color: #aae1b9;
+}
+
+.payWay:active {
+	background-color: #aae1b9;
+}

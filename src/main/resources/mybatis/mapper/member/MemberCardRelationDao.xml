@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.MemberCardRelationDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="MemberCardRelation">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="card_id" jdbcType="VARCHAR" property="cardId" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 member_id, card_id
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from member_card_relation
+		 where member_id = #{memberId}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from member_card_relation
+		 where member_id = #{memberId}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="MemberCardRelation">
+		 insert into member_card_relation
+ 		(member_id,card_id) 
+		 values 
+ 		(#{memberId},#{cardId}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="MemberCardRelation">
+		 update member_card_relation
+ 		 <set> 
+			<if test="cardId != null and cardId != ''">
+				 card_id = #{cardId},
+			</if>
+ 		 </set>
+		 where member_id = #{memberId}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="MemberCardRelation" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from member_card_relation
+		 where 1=1 
+			<if test="cardId != null and cardId != ''">
+				 and card_id = #{cardId}
+			</if>
+	</select>
+	<!-- 查询 (根据会员号查询) -->
+	<select id="getByMemberId" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from member_card_relation
+		 where member_id = #{memberId}
+	</select>
+	
+</mapper>

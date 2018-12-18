@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.PrepayOrderDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="PrepayOrder">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="type" jdbcType="VARCHAR" property="type" />
+		 <result column="pay_type" jdbcType="VARCHAR" property="payType" />
+		 <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
+		 <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+		 <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+		 <result column="ip_address" jdbcType="VARCHAR" property="ipAddress" />
+		 <result column="prepay_id" jdbcType="VARCHAR" property="prepayId" />
+		 <result column="trade_type" jdbcType="VARCHAR" property="tradeType" />
+		 <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		 <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
+		 <result column="out_trade_no" jdbcType="VARCHAR" property="outTradeNo" />
+		 <result column="open_id" jdbcType="VARCHAR" property="openId" />
+		 <result column="member_id" jdbcType="VARCHAR" property="memberId" />
+		 <result column="member_card_id" jdbcType="VARCHAR" property="memberCardId" />
+		 
+		 <result column="sign" jdbcType="VARCHAR" property="sign" />
+		 <result column="status" jdbcType="VARCHAR" property="status" />
+		 
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id,
+		 type,
+		 pay_type,
+		 order_amount,
+		 order_id,
+		 order_code,
+		 ip_address,
+		 prepay_id,
+		 trade_type,
+		 create_date,
+		 merchant_id,
+		 out_trade_no,
+		 open_id,
+		 member_id,
+		 member_card_id,
+		 sign,
+		 status
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from prepay_order
+		 where id = #{id}
+	</select>
+	
+	<select id="queryOrderByTradeNo" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from prepay_order
+		 where out_trade_no = #{out_trade_no}
+	</select>
+	
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from prepay_order
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+	insert into prepay_order
+	(    id,
+		 type,
+		 pay_type,
+		 order_amount,
+		 order_id,
+		 order_code,
+		 ip_address,
+		 prepay_id,
+		 trade_type,
+		 create_date,
+		 merchant_id,
+		 out_trade_no,
+		 open_id,
+		 member_id,
+		 member_card_id,
+		 sign,
+		 status)
+	values
+	(#{id},#{type},#{payType},#{orderAmount},#{orderId},#{orderCode},#{ipAddress},#{prepayId},#{tradeType},#{createDate},#{merchantId},#{outTradeNo},#{openId},#{memberId},#{memberCardId},#{sign},#{status}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="SendReceivePerson">
+		 update prepay_order
+ 		 <set> 
+ 		 	<if test="ipAddress != null and ipAddress != ''">
+				 ip_address = #{ipAddress},
+			</if>
+			
+			<if test="status != null and status != ''">
+				 status = #{status},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+	
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="SendReceivePerson" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from prepay_order
+		 where 1=1 
+			<if test="outTradeNo != null and outTradeNo != ''">
+				 and out_trade_no = #{outTradeNo}
+			</if>
+			
+			<if test="memberId != null and memberId != ''">
+				 and member_id = #{memberId}
+			</if>
+			
+			<if test="sign != null and sign != ''">
+				 and sign = #{sign}
+			</if>
+			order by create_date desc
+	</select>
+	
+	
+	<select id="querOrderBySign" parameterType="String" resultMap="BaseResultMap">
+			select
+		 <include refid="Base_Column_List" />
+		 from prepay_order
+		 where sign = #{sign}
+	</select>
+	
+</mapper>

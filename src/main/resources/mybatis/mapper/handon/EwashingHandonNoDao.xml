@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.EwashingHandonNoDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="HandonNo">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="hand_type" jdbcType="VARCHAR" property="handType" />
+		 <result column="hand_on_area" jdbcType="VARCHAR" property="handonArea" />
+		 <result column="hand_on_no" jdbcType="VARCHAR" property="handOnNo" />
+		 <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		 <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+		 <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+		 <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+		 <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+		 <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName" />
+		 <result column="status" jdbcType="VARCHAR" property="status" />
+		 
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 h.id ,h.store_id ,h.hand_type,a.area as hand_on_area,h.hand_on_no,h.create_date,h.create_user_name,h.update_date,h.update_user_name,h.status,
+		 h.create_user_id,h.update_user_id,s.store_name
+		 
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_hand_on_no h
+		 left join store_hand_on_area a on h.hand_on_area =a.id
+		 left join store s on h.store_id =s.id
+		 where h.id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from store_hand_on_no
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+		 insert into store_hand_on_no
+ 		(id ,store_id ,hand_on_area,hand_on_no,create_date,create_user_name,status,hand_type,create_user_id) 
+		 values 
+ 		(#{id},#{storeId},#{handonArea},#{handOnNo},#{createDate},#{createUserName},#{status},#{handType},#{createUserId}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="HandonArea">
+		 update store_hand_on_no
+ 		 <set> 
+			<if test="handOnNo != null and handOnNo != ''">
+				 hand_on_no = #{handOnNo},
+			</if>
+			
+			<if test="updateDate != null and updateDate != ''">
+				 update_date = #{updateDate},
+			</if>
+			
+			<if test="updateUserName != null and updateUserName != ''">
+				 update_user_name = #{updateUserName},
+			</if>
+			
+			<if test="updateUserId != null and updateUserId != ''">
+				 update_user_id = #{updateUserId},
+			</if>
+			
+			<if test="status != null and status != ''">
+				 status = #{status},
+			</if>
+			
+ 		 </set>
+		 where id = #{id}
+	</update>
+	
+	<!-- 根据隔架区，隔架号，类型 更新隔架号状态 -->
+	<update id="updateHandNo" parameterType="HandOnNo">
+		 update store_hand_on_no
+ 		 <set> 
+			
+			<if test="updateDate != null and updateDate != ''">
+				 update_date = #{updateDate},
+			</if>
+			
+			<if test="updateUserName != null and updateUserName != ''">
+				 update_user_name = #{updateUserName},
+			</if>
+			
+			<if test="updateUserId != null and updateUserId != ''">
+				 update_user_id = #{updateUserId},
+			</if>
+			
+			<if test="status != null and status != ''">
+				 status = #{status},
+			</if>
+			
+ 		 </set>
+		 where id =#{handOnNo} and hand_on_area =#{handonArea} and hand_type=#{handType}
+	</update>
+	
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="HandonArea" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from store_hand_on_no h
+		 left join store_hand_on_area a on h.hand_on_area =a.id
+		 left join store s on h.store_id =s.id
+		 where 1=1 
+			<if test="handOnNo != null and handOnNo != ''">
+				 and h.hand_on_no = #{handOnNo}
+			</if>
+			
+			<if test="handonArea != null and handonArea != ''">
+				 and h.hand_on_area = #{handonArea}
+			</if>
+			
+			<if test="status != null and status != ''">
+				 and h.status = #{status}
+			</if>
+			
+			<if test="handType != null and handType != ''">
+				 and h.hand_type = #{handType}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				 and h.store_id = #{storeId}
+			</if>
+	</select>
+
+</mapper>

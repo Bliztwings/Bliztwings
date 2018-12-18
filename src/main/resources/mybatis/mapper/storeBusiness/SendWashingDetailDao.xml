@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.SendWashingDetailDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="SendWashing">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="send_number" jdbcType="VARCHAR" property="sendNumber" />
+		 <result column="clothes_id" jdbcType="VARCHAR" property="clothesId" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		id,send_number,clothes_id
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from send_washing_detail
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from send_washing_detail
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+	insert into send_washing_detail
+	(id,send_number,clothes_id)
+	values
+	(#{id},#{sendNumber},#{clothesId})
+</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="SendWashing">
+		 update send_washing_detail
+ 		 <set> 
+			<if test="sendNumber != null and sendNumber != ''">
+				 send_number = #{sendNumber},
+			</if>
+			
+			<if test="clothesId != null and clothesId != ''">
+				 clothes_id = #{clothesId},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="StoreClothes" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+			from send_washing_detail
+		 	where 1=1 
+			<if test="sendNumber != null and sendNumber != ''">
+				 and send_number = #{sendNumber}
+			</if>
+			
+			<if test="clothesId != null and clothesId != ''">
+				 and clothes_id = #{clothesId}
+			</if>
+	</select>
+</mapper>

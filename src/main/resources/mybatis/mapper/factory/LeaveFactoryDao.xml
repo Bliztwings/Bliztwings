@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.LeaveFactoryDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="LeaveFactory">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="count" jdbcType="INTEGER" property="count" />
+		 <result column="leave_factory_number" jdbcType="VARCHAR" property="leaveFactoryNumber" />
+		 <result column="leave_date" jdbcType="TIMESTAMP" property="leaveDate" />
+		 <result column="user_id" jdbcType="VARCHAR" property="userId" />
+		 <result column="opt_date" jdbcType="TIMESTAMP" property="optDate" />
+		 
+		 
+	</resultMap>
+	
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+			id,
+			store_id,
+			count,
+			leave_factory_number,
+			leave_date,
+			user_id,
+			opt_date
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from leave_factory 
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from leave_factory
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="map">
+	insert into leave_factory
+	(id,store_id,
+	count,
+	leave_factory_number,
+	leave_date,
+	user_id,
+	opt_date)
+	values
+	(#{id},#{storeId},#{count},#{leaveFactoryNumber},#{leaveDate},#{userId},#{optDate})
+</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="ClothesFlow">
+		 update leave_factory
+ 		 <set> 
+			<if test="leaveFactoryNumber != null and leaveFactoryNumber != ''">
+				 leave_factory_number = #{leaveFactoryNumber},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="ClothesFlow" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+			from leave_factory
+		 	where 1=1 
+			<if test="storeId != null and storeId != ''">
+				 and store_id = #{storeId}
+			</if>
+			order by leave_date asc
+	</select>
+
+</mapper>

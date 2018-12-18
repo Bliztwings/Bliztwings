@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.MemberDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="Member">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="name" jdbcType="VARCHAR" property="name" />
+		 <result column="sex" jdbcType="VARCHAR" property="sex" />
+		 <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+		 <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+		 <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+		 <result column="address" jdbcType="VARCHAR" property="address" />
+		 <result column="type" jdbcType="VARCHAR" property="type" />
+		 <result column="remark" jdbcType="VARCHAR" property="remark" />
+		 <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+		 <result column="province" jdbcType="VARCHAR" property="province" />
+		 <result column="city" jdbcType="VARCHAR" property="city" />
+		 <result column="area" jdbcType="VARCHAR" property="area" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		 <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		 <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		 <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
+		 <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+		 <result column="open_id" jdbcType="VARCHAR" property="openId" />
+		 <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+		 <result column="client_type" jdbcType="VARCHAR" property="clientType" />
+		 <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+		 <result column="token" jdbcType="VARCHAR" property="token" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 m.id, m.name, m.sex, m.mobile_phone, m.telephone, m.birthday, m.address, m.type, m.remark, m.store_id, m.province, m.city, m.area,m.create_time, m.create_user, m.update_time, m.update_user,m.is_deleted,m.open_id,m.device_id,m.client_type,m.last_login_time,m.token   
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />,s.store_name as store_name 
+		 from member m left join store s on m.store_id=s.id
+		 where m.id = #{id} 
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from member
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="Member">
+		 insert into member
+ 		(id,name,sex,mobile_phone,telephone,birthday,address,type,remark,store_id,province,city,area,create_time,create_user,update_time,update_user,is_deleted,password,open_id,device_id,client_type,last_login_time,app_id) 
+		 values 
+ 		(#{id},#{name},#{sex},#{mobilePhone},#{telephone},#{birthday},#{address},#{type},#{remark},#{storeId},#{province},#{city},#{area},#{createTime},#{createUser},#{updateTime},#{updateUser},#{isDeleted},#{password},#{openId},#{deviceId},#{clientType},#{lastLoginTime},#{appId}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="Member">
+		 update member
+ 		 <set> 
+			<if test="name != null and name != ''">
+				 name = #{name},
+			</if>
+			<if test="sex != null and sex != ''">
+				 sex = #{sex},
+			</if>
+			<if test="mobilePhone != null and mobilePhone != ''">
+				 mobile_phone = #{mobilePhone},
+			</if>
+			<if test="telephone != null and telephone != ''">
+				 telephone = #{telephone},
+			</if>
+			<if test="birthday != null and birthday != ''">
+				 birthday = #{birthday},
+			</if>
+			<if test="address != null and address != ''">
+				 address = #{address},
+			</if>
+			<if test="type != null and type != ''">
+				 type = #{type},
+			</if>
+			<if test="remark != null and remark != ''">
+				 remark = #{remark},
+			</if>
+			<if test="storeId != null and storeId != ''">
+				 store_id = #{storeId},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				 update_user = #{updateUser},
+			</if>
+			<if test="password != null and password != ''">
+				 password = #{password},
+			</if>
+			<if test="openId != null and openId != ''">
+				 open_id = #{openId},
+			</if>
+			<if test="deviceId != null and deviceId != ''">
+				 device_id = #{deviceId},
+			</if>
+			<if test="lastLoginTime != null and lastLoginTime != ''">
+				 last_login_time = #{lastLoginTime},
+			</if>
+			<if test="token != null and token != ''">
+				 token = #{token},
+			</if>
+			
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="Member" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />,s.store_name as store_name 
+		 from member m left join store s on m.store_id=s.id 
+		 where 1=1  
+			<if test="name != null and name != ''">
+				 and m.name = #{name}
+			</if>
+			<if test="mobilePhone != null and mobilePhone != ''">
+				 and m.mobile_phone = #{mobilePhone}
+			</if>
+			<if test="telephone != null and telephone != ''">
+				 and m.telephone = #{telephone}
+			</if>
+			<if test="type != null and type != ''">
+				 and m.type = #{type}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				 and m.store_id = #{storeId}
+			</if>
+			<if test="province != null and province != ''">
+				 and m.province = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				 and m.city = #{city}
+			</if>
+			<if test="area != null and area != ''">
+				 and m.area = #{area}
+			</if>
+			<if test="createUser != null and createUser != ''">
+				 and m.create_user = #{createUser}
+			</if>
+			<if test="appId == null || appId == ''">
+				 and m.app_id is null
+			</if>
+			
+			<if test="appId != null and appId != ''">
+				 and m.app_id =#{appId}
+			</if>
+	</select>
+	
+	<select id="getMemberByCardId" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />,s.store_name as store_name 
+		 from member m left join store s on m.store_id=s.id
+		 where exists(select 1 from member_card_relation where card_id=#{cardId} and member_id=m.id)
+	</select>
+	
+	<!-- 查询 手机+密码获取 -->
+	<select id="getByMbileAndPwd" parameterType="Member" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />,s.store_name as store_name 
+		 from member m left join store s on m.store_id=s.id 
+		 where m.mobile_phone = #{mobilePhone} and m.password=#{password}  
+		 <if test="appId != null and appId != ''">
+			 and m.app_id = #{appId}
+		</if>
+	</select>
+	
+	<update id="changePassword" parameterType="Member">
+		 update member
+ 		 <set> 
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			<if test="password != null and password != ''">
+				 password = #{password},
+			</if>
+ 		 </set>
+		 where mobile_phone = #{mobilePhone} and password=#{oldPassword}  
+		 <if test="appId != null and appId != ''">
+			 and app_id = #{appId}
+		</if>
+	</update>
+	
+	<update id="resetPassword" parameterType="Member">
+		 update member
+ 		 <set> 
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			<if test="password != null and password != ''">
+				 password = #{password},
+			</if>
+ 		 </set>
+		 where mobile_phone = #{mobilePhone}   
+		 <if test="appId != null and appId != ''">
+			 and app_id = #{appId}
+		</if>
+	</update>
+	
+	
+	<!-- 根据token获取会员信息 -->
+	<select id="getByToken" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />,s.store_name as store_name 
+		 from member m left join store s on m.store_id=s.id 
+		 where m.token=#{token}
+	</select>
+	
+</mapper>

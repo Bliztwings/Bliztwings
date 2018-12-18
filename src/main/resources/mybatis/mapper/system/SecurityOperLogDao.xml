@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.SecurityOperLogDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="SecurityOperLog">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="user_name" jdbcType="VARCHAR" property="userName" />
+		 <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
+		 <result column="oper_time" jdbcType="TIMESTAMP" property="operTime" />
+		 <result column="ip" jdbcType="VARCHAR" property="ip" />
+		 <result column="oper_object" jdbcType="VARCHAR" property="operObject" />
+		 <result column="oper_action" jdbcType="VARCHAR" property="operAction" />
+		 <result column="oper_desc" jdbcType="VARCHAR" property="operDesc" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id,	user_name,	user_real_name,	oper_time,	ip,	oper_object,	oper_action,	oper_desc
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from security_oper_log
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from security_oper_log
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="SecurityOperLog">
+		 insert into security_oper_log
+ 		(id,user_name,user_real_name,oper_time,ip,oper_object,oper_action,oper_desc) 
+		 values 
+ 		(#{id},#{userName},#{userRealName},#{operTime},#{ip},#{operObject},#{operAction},#{operDesc}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="SecurityOperLog">
+		 update security_oper_log
+ 		 <set> 
+			<if test="userName != null and userName != ''">
+				 user_name = #{userName},
+			</if>
+			<if test="userRealName != null and userRealName != ''">
+				 user_real_name = #{userRealName},
+			</if>
+			<if test="operTime != null and operTime != ''">
+				 oper_time = #{operTime},
+			</if>
+			<if test="ip != null and ip != ''">
+				 ip = #{ip},
+			</if>
+			<if test="operObject != null and operObject != ''">
+				 oper_object = #{operObject},
+			</if>
+			<if test="operAction != null and operAction != ''">
+				 oper_action = #{operAction},
+			</if>
+			<if test="operDesc != null and operDesc != ''">
+				 oper_desc = #{operDesc},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="SecurityOperLog" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from security_oper_log
+		 where 1=1 
+			<if test="userName != null and userName != ''">
+				 and user_name = #{userName}
+			</if>
+			<if test="userRealName != null and userRealName != ''">
+				 and user_real_name = #{userRealName}
+			</if>
+			<if test="operTime != null and operTime != ''">
+				 and oper_time = #{operTime}
+			</if>
+			<if test="ip != null and ip != ''">
+				 and ip = #{ip}
+			</if>
+			<if test="operObject != null and operObject != ''">
+				 and oper_object = #{operObject}
+			</if>
+			<if test="operAction != null and operAction != ''">
+				 and oper_action = #{operAction}
+			</if>
+			<if test="operDesc != null and operDesc != ''">
+				 and oper_desc = #{operDesc}
+			</if>
+	</select>
+
+</mapper>

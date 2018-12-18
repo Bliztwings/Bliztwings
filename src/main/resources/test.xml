@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menu>
+
+	<dcpj>
+		<m>
+			<name>立项阶段</name>
+			<url>www.baidu.com</url>
+		</m>
+		<m>
+			<name>设计评审</name>
+			<url>www.baidu.com</url>
+		</m>
+		<m>
+			<name>野外验收</name>
+			<url>www.baidu.com</url>
+		</m>
+		<m>
+			<name>数据库会叫</name>
+			<url>www.baidu.com</url>
+		</m>
+	</dcpj>
+
+	<jcyj>
+		<m>
+			<name>我的大学想</name>
+			<url>www.baidu.com</url>
+		</m>
+		<m>
+			<name>中国</name>
+			<url>www.baidu.com</url>
+		</m>
+		<m>
+			<name>美国</name>
+			<url>www.baidu.com</url>
+		</m>
+		<m>
+			<name>英国</name>
+			<url>www.baidu.com</url>
+		</m>
+	</jcyj>
+</menu>

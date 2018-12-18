@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.WechatTempleteDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="WechatConfig">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="app_id" jdbcType="VARCHAR" property="appId" />
+		 <result column="app_secret" jdbcType="VARCHAR" property="appSecret" />
+		 <result column="token" jdbcType="VARCHAR" property="token" />
+		 <result column="expires_in" jdbcType="BIGINT" property="expires_in" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 
+		 <result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
+		 <result column="sign_key" jdbcType="VARCHAR" property="signKey" />
+		 
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id, app_id, app_secret, token, expires_in,create_time,merchant_id,sign_key
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from wechat_config
+		 where id = #{id}
+	</select>
+	
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getWechatConfigByAppId" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from wechat_config
+		 where app_id = #{appId}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="Integer">
+		 delete from wechat_config
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="WechatConfig">
+		 insert into wechat_config
+ 		(id, app_id, app_secret, token, expires_in,create_time) 
+		 values 
+ 		(#{id},#{appId},#{appSecret},#{token},#{expires_in},#{createTime},#{merchant_id},#{sign_key}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="WechatConfig">
+		 update wechat_config
+ 		 <set> 
+			<if test="token != null and token != ''">
+				 token = #{token},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				 create_time = #{createTime},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="SysArea" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from wechat_config
+		 where 1=1 
+			<if test="token != null and token != ''">
+				 and token = #{token}
+			</if>
+	</select>
+
+</mapper>

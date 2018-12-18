@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="ewashing:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>ewashing</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="ewashing.war">
+      <element id="artifact" artifact-name="ewashing:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ehyf.ewashing.dao.ProduceCategoryDao">
+
+	<!-- 通用ResultMap  -->
+	<resultMap id="BaseResultMap" type="ProduceCategory">
+		 <id column="id" jdbcType="VARCHAR" property="id" />
+		 <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+		 <result column="code" jdbcType="VARCHAR" property="code" />
+		 <result column="name" jdbcType="VARCHAR" property="name" />
+		 <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+		 <result column="sort" jdbcType="INTEGER" property="sort" />
+		 <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		 <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+		 <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		 <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+		 <result column="is_deleted" jdbcType="VARCHAR" property="isDeleted" />
+	</resultMap>
+
+	<!-- 通用查询结果列  -->
+	<sql id="Base_Column_List">
+		 id, parent_id, code, name,img_url,sort, create_time, create_user, update_time, update_user, is_deleted
+	</sql>
+
+	<!-- 查询 (根据主键ID查询) -->
+	<select id="getById" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from produce_category
+		 where id = #{id}
+	</select>
+
+	<!--  删除 (根据主键ID删除)  -->
+	<delete id="deleteById" parameterType="String">
+		 delete from produce_category
+		 where id = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="ProduceCategory">
+		 insert into produce_category
+ 		(id,parent_id,code,name,sort,create_time,create_user,update_time,update_user,is_deleted,img_url) 
+		 values 
+ 		(#{id},#{parentId},#{code},#{name},#{sort},#{createTime},#{createUser},#{updateTime},#{updateUser},#{isDeleted},#{imgUrl}) 
+	</insert>
+
+	<!-- 修改  -->
+	<update id="update" parameterType="ProduceCategory">
+		 update produce_category
+ 		 <set> 
+			<if test="parentId != null and parentId != ''">
+				 parent_id = #{parentId},
+			</if>
+			<if test="code != null and code != ''">
+				 code = #{code},
+			</if>
+			<if test="name != null and name != ''">
+				 name = #{name},
+			</if>
+			<if test="imgUrl != null and imgUrl != ''">
+				 img_url = #{imgUrl},
+			</if>
+			<if test="sort != null and sort != ''">
+				 sort = #{sort},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				 update_user = #{updateUser},
+			</if>
+ 		 </set>
+		 where id = #{id}
+	</update>
+
+	<!-- 分页查询  -->
+	<select id="findList" parameterType="ProduceCategory" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from produce_category
+		 where 1=1 
+			<if test="parentId != null and parentId != ''">
+				 and parent_id = #{parentId}
+			</if>
+			<if test="code != null and code != ''">
+				 and code = #{code}
+			</if>
+			<if test="name != null and name != ''">
+				 and name = #{name}
+			</if>
+	</select>
+	
+	<!-- 获取root接点  -->
+	<select id="getRoot" parameterType="String" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from produce_category where parent_id is null order by sort asc
+	</select>
+	
+	<!-- 获取root接点获取子栏目  -->
+	<select id="getChildren" resultMap="BaseResultMap">
+		 select
+		 <include refid="Base_Column_List" />
+		 from produce_category p where 1=1 
+		 <if test="parentId != null and parentId != ''">
+			 and p.parent_id = #{parentId,jdbcType=VARCHAR}
+		 </if> 
+		 <if test="code != null and code != ''">
+			 and exists(select 1 from produce_category where id=p.parent_id and code=#{code,jdbcType=VARCHAR})
+		 </if> 
+	</select>
+
+</mapper>
