@@ -213,7 +213,7 @@ a {color:black;
 </script>
 <div class="autoH">
 
-		<div style="display: inline;display: none" id="quickKey">
+		<div style="display: inline;display: block" id="quickKey">
 			<div class="store-left-td-div" 
 	                 style="position: relative;float: left;margin-left: 50px;margin-top: 50px;border-radius: 10px;"
 	                 onclick="takeClothes()"></div>

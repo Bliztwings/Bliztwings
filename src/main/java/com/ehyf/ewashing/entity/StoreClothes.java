@@ -23,6 +23,11 @@ public class StoreClothes extends BaseEntity<StoreClothes> {
 	private String id;
 
 	/**
+	 * 用户姓名
+	 */
+	private String userName;
+
+	/**
 	 * 门店编码
 	 */
 	private String storeId;
@@ -257,8 +262,19 @@ public class StoreClothes extends BaseEntity<StoreClothes> {
 	 * 微信公众号ID
 	 */
 	private String appId;
-	
-	
+
+	/**
+	 * 地址
+	 */
+	private String orderAddress;
+
+	public String getName() {
+		return userName;
+	}
+
+	public void setName(String Name) {
+		this.userName = Name;
+	}
 
 	public String getHandType() {
 		return handType;
@@ -316,8 +332,6 @@ public class StoreClothes extends BaseEntity<StoreClothes> {
 		this.storeId = storeId;
 	}
 
-	
-
 	public String getStoreName() {
 		return storeName;
 	}
@@ -341,8 +355,6 @@ public class StoreClothes extends BaseEntity<StoreClothes> {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-
-	
 
 	public String getMemberName() {
 		return memberName;
@@ -642,6 +654,14 @@ public class StoreClothes extends BaseEntity<StoreClothes> {
 
 	public void setPhotoList(List<ClothesPhoto> photoList) {
 		this.photoList = photoList;
+	}
+
+	public String getOrderAddress() {
+		return orderAddress;
+	}
+
+	public void setOrderAddress(String orderAddress) {
+		this.orderAddress = orderAddress;
 	}
 
 }

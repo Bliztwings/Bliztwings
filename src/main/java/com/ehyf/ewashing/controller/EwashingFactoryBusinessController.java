@@ -1,6 +1,7 @@
 package com.ehyf.ewashing.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
@@ -736,6 +739,150 @@ public class EwashingFactoryBusinessController {
         return "ewashing/factory/queryClothes";
     }
 
+    //查询条码对应的订单，该订单中包含的所有衣服的信息返回
+    @RequestMapping(value="/queryOrderInfo")
+    @ResponseBody
+    public String queryOrderInfo(HttpServletRequest req,Model model)
+    {
+        int i = 0;
+        int value = 0;
+        BigDecimal price;
+        BigDecimal priceTotal = new BigDecimal("0.00");
+        String strPrice;
+        String status = "";
+        String OrderInfo = "";
+        // 条码
+        String queryKey = req.getParameter("queryKey");
+        //queryKey = "2803080";
+        //queryKey = "2801176";
+
+        value = queryKey.length();
+        if(value==0) return OrderInfo;
+
+        try
+        {
+            model.asMap().clear();
+
+            //查询本条码的订单号
+            StoreClothes clothes = new StoreClothes();
+            clothes.setBarCode(queryKey);
+            List<StoreClothes> list2 = storeBusiness.findOrderCode(clothes);
+            if (CollectionUtils.isEmpty(list2))
+            {
+                return OrderInfo;
+            }
+            queryKey = list2.get(0).getOrderCode();
+
+            //查询订单下所有衣服的信息
+            clothes.setOrderCode(queryKey);
+            List<StoreClothes> list = storeBusiness.findOrderInfo(clothes);
+            if (CollectionUtils.isEmpty(list)) {
+                return OrderInfo;
+            }
+
+
+            for (i = 0; i < list.size(); i++)
+            {
+                //衣服状态从数字转成汉字
+                status = list.get(i).getStatus();
+                value = Integer.valueOf(status);
+                status = GetClothesStatus(value);
+
+                list.get(i).setStatus(status);
+
+                //把价格转成String
+                price = list.get(i).getPrice();
+                //设置小数位数，第一个变量是小数位数，第二个变量是取舍方法(四舍五入)
+                price = price.setScale(2, BigDecimal.ROUND_HALF_UP);
+                priceTotal = priceTotal.add(price); //总价
+                //转化为字符串
+                strPrice = price.toString();
+
+                list.get(i).setHandOnArea(strPrice);
+            }
+
+            //总价
+            priceTotal = priceTotal.setScale(2, BigDecimal.ROUND_HALF_UP);
+            strPrice = priceTotal.toString();
+            list.get(0).setHandOnNo(strPrice);
+
+            //把数组序列化成字符串
+            JSONArray json = JSONArray.fromObject(list);
+            OrderInfo = json.toString();
+            OrderInfo = JSONArray.fromObject(list).toString();
+        }
+        catch (Exception e)
+        {
+            //log.error(e.toString(), e);
+        }
+        return OrderInfo;
+    }
+
+    //得到洗衣的状态，代码转汉字
+    private String GetClothesStatus(int value)
+    {
+        String status = "";
+
+        switch (value)
+        {
+            case 0:
+                status = "已收衣";
+                break;
+            case 1:
+                status = "待送洗";
+                break;
+            case 2:
+                status = "待入厂";
+                break;
+            case 3:
+                status = "已入厂";
+                break;
+            case 4:
+                status = "水洗";
+                break;
+            case 5:
+                status = "干洗";
+                break;
+            case 6:
+                status = "烘干";
+                break;
+            case 7:
+                status = "熨烫";
+                break;
+            case 8:
+                status = "精洗";
+                break;
+            case 9:
+                status = "皮衣";
+                break;
+            case 10:
+                status = "质检";
+                break;
+            case 11:
+                status = "分拣";
+                break;
+            case 12:
+                status = "工厂已上挂";
+                break;
+            case 13:
+                status = "已出厂";
+                break;
+            case 14:
+                status = "已签收 (门店)";
+                break;
+            case 15:
+                status = "门店已上挂";
+                break;
+            case 16:
+                status = "已取衣";
+                break;
+            default:
+                status = "未知状态";
+        }
+
+        return status;
+
+    }
     /**
      * 工厂上挂
      * 
@@ -773,12 +920,14 @@ public class EwashingFactoryBusinessController {
 		SecurityUser loginUser = (SecurityUser) req.getAttribute(Constants.CURRENT_USER);
 		// 条码
 		String queryKey = req.getParameter("queryKey");
-		if (!StringUtils.isEmptyString(queryKey)) {
+		if (!StringUtils.isEmptyString(queryKey))
+		{
 			// 查询是否为衣服条码
 			StoreClothes clothes = new StoreClothes();
 			clothes.setBarCode(queryKey);
 			List<StoreClothes> list = storeBusiness.findClothesCommon(clothes);
-			if (CollectionUtils.isEmpty(list)) {
+			if (CollectionUtils.isEmpty(list))
+			{
 				ClothesAttach attach = new ClothesAttach();
 				attach.setAttachBarCode(queryKey);
 				// 查询是否为附件条码
@@ -786,12 +935,15 @@ public class EwashingFactoryBusinessController {
 				if (CollectionUtils.isEmpty(atatchList)) {
 					model.addAttribute("resultMsg", "上挂失败，找不对应条码！");
 					model.addAttribute("resultCode", 0);
-				} else {
+				}
+				else
+				{
 					attachBarcode(atatchList.get(0).getClothesBarCode(), model);
 				}
-			} else {
-				
-				// 判断衣服是否已经如厂，没有入厂，不能上挂
+			}
+			else
+			{
+				// 判断衣服是否已经入厂，没有入厂，不能上挂
 				ClothesFlow flowH =new ClothesFlow();
 				flowH.setClothesId(list.get(0).getId());
 				flowH.setClothesStatus("3");
@@ -806,6 +958,8 @@ public class EwashingFactoryBusinessController {
 				}
 			}
 		}
+        model.addAttribute("queryKey", queryKey);
+
 		return "ewashing/factory/factoryHandOnNew";
 	}
 
@@ -818,7 +972,12 @@ public class EwashingFactoryBusinessController {
 		flow.setClothesId(storeClothes.getId());
 		flow.setClothesStatus("12");
 		List<ClothesFlow> flowList =clothesFlowService.findList(flow);
-		
+		String status;
+        Boolean empty;
+
+        status = storeClothes.getStatus();
+        empty = CollectionUtils.isEmpty(flowList);
+
 		if ("12".equals(storeClothes.getStatus()) || !CollectionUtils.isEmpty(flowList)) {
 			model.addAttribute("resultMsg", "该衣服已经上挂");
 			model.addAttribute("resultCode", 0);

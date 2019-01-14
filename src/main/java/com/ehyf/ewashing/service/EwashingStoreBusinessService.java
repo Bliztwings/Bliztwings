@@ -1300,6 +1300,20 @@ public class EwashingStoreBusinessService{
 		return list;
 	}
 
+	//查找订单号
+	public List<StoreClothes> findOrderCode(StoreClothes storeClothes) {
+
+		List<StoreClothes> list = clothesDao.findOrderCode(storeClothes);
+		return list;
+	}
+
+	//查找订单信息
+	public List<StoreClothes> findOrderInfo(StoreClothes storeClothes) {
+
+		List<StoreClothes> list = clothesDao.findOrderInfo(storeClothes);
+		return list;
+	}
+
 
 	public List<StoreClothes> findHandonClothes(StoreClothes clothes) {
 		List<StoreClothes> list = clothesDao.findHandonClothes(clothes);

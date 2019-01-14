@@ -262,9 +262,8 @@ public class StoreOrder extends BaseEntity<StoreOrder> {
 	 * 1:未打印  2：已打印
 	 */
 	private String printStatus;
-	
-	
-	
+
+
 	public String getPrintStatus() {
 		return printStatus;
 	}

@@ -548,6 +548,7 @@
         c.order_code,
         c.bar_code,
         m.name as user_name,
+		m.mobile_phone,
         d.data_name as clothes_name,
         e.data_name as color,
         c.price,
@@ -560,8 +561,9 @@
         c.store_id,
         s.store_name,
 		s.telephone,
-        o.order_address
-        from store_clothes c
+        o.order_address,
+		o.leave_message as leaveDateStr
+		from store_clothes c
         LEFT JOIN store s on c.store_id =s.id
         LEFT JOIN store_order o on c.order_code =o.order_code
         LEFT JOIN member m ON c.member_id = m.id
