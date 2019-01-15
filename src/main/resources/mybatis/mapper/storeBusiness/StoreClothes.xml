@@ -202,7 +202,7 @@
 				 update_user_name = #{updateUserName},
 			</if>
 			
-			<if test="handOnArea != null and handOnArea != ''">findOrderCode
+			<if test="handOnArea != null and handOnArea != ''">
 				 hand_on_area = #{handOnArea},
 			</if>
 			
@@ -354,7 +354,7 @@
 			</if>
 			<if test="storeId != null and storeId != ''">
 				 and c.store_id = #{storeId}
-			</if>findClothesCommon
+			</if>
 			
 			<if test="status != null and status != ''">
 				 and c.status = #{status}
@@ -575,6 +575,45 @@
         </if>
         order by c.create_date desc
     </select>
+
+	<!-- 查询水洗唛的信息  -->
+	<select id="findShuiXiMai" parameterType="StoreClothes" resultMap="BaseResultMap">
+		SELECT
+		c.id,
+        c.order_code,
+		c.bar_code,
+		m.NAME,
+		m.mobile_phone,
+		e.data_name as clothes_name,
+		d.data_name as color,
+		c.price,
+		c.brand,
+		c.flaw,
+		c.STATUS,
+		o.place_order_date as takingDate,
+		c.service_fee,
+		c.create_date,
+		c.create_user_name,
+		c.store_id,
+		s.store_name,
+		o.clothes_count,
+		o.order_address,
+		o.leave_message
+	FROM
+		store_clothes c
+		LEFT JOIN store s ON c.store_id = s.id
+		LEFT JOIN store_order o ON c.order_code = o.order_code
+		LEFT JOIN member m ON c.member_id = m.id
+		LEFT JOIN store_data_dictionary d ON c.color = d.id
+		LEFT JOIN store_data_dictionary e ON c.clothes_name = e.id
+	WHERE
+		1 = 1
+		<if test="orderCode != null and orderCode != ''">
+		AND c.order_code = ( SELECT order_code FROM store_order WHERE seal_number = #{orderCode} )
+		</if>
+	ORDER BY
+		c.create_date DESC
+	</select>
 
 	<select id="findClothesBySendNumber" parameterType="StoreClothes" resultMap="BaseResultMap">
 		 select

@@ -1314,6 +1314,13 @@ public class EwashingStoreBusinessService{
 		return list;
 	}
 
+	//查找水洗唛信息
+	public List<StoreClothes> findShuiXiMai(StoreClothes storeClothes) {
+
+		List<StoreClothes> list = clothesDao.findShuiXiMai(storeClothes);
+		return list;
+	}
+
 
 	public List<StoreClothes> findHandonClothes(StoreClothes clothes) {
 		List<StoreClothes> list = clothesDao.findHandonClothes(clothes);

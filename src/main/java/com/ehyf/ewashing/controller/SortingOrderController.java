@@ -1,10 +1,13 @@
 package com.ehyf.ewashing.controller;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import com.ehyf.ewashing.entity.StoreClothes;
 import com.ehyf.ewashing.entity.StoreOrder;
 import com.ehyf.ewashing.service.EwashingStoreBusinessService;
 import com.ehyf.ewashing.service.MemberCardService;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * o2o 订单分拣
@@ -99,6 +103,53 @@ public class SortingOrderController {
 			model.addAttribute("resultMsg", "获取数据失败");
 			return JSONObject.toJSONString(model);
 		}
+	}
+
+	//根据封签号查询水洗唛
+	//查询水洗唛
+	@RequestMapping(value="/queryShuiXiMai")
+	@ResponseBody
+	public String queryShuiXiMai(HttpServletRequest req,Model model)
+	{
+		int i = 0;
+		String OrderInfo = "";
+
+		String queryKey = req.getParameter("queryKey");
+
+		try
+		{
+			StoreClothes clothes = new StoreClothes();
+			clothes.setOrderCode(queryKey);
+
+			List<StoreClothes> list = storeBusiness.findShuiXiMai(clothes);
+			if (CollectionUtils.isEmpty(list))
+			{
+				return OrderInfo;
+			}
+
+			for (i = 0; i < list.size(); i++)
+			{
+				String strtakddate;
+				Date takdate = list.get(i).getTakingDate();
+				//日期格式，精确到日 2017-4-16
+				DateFormat df1 = DateFormat.getDateInstance();
+				strtakddate =df1.format(takdate);
+				//用“服务类型”字段来放取衣日期
+				list.get(i).setServiceType(strtakddate);
+			}
+
+			//把数组序列化成字符串
+			//JSONArray json = JSONArray.fromObject(list);
+			//OrderInfo = json.toString();
+			OrderInfo = JSONArray.fromObject(list).toString();
+
+		}
+		catch (Exception e)
+		{
+			//log.error(e.toString(), e);
+		}
+
+		return OrderInfo;
 	}
 
 }

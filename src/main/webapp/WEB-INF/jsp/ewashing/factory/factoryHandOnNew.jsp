@@ -169,7 +169,6 @@
 		var leaveMessage;  //用户留言
 
 		var jsonObj =  JSON.parse(jsonStr);
-		var jsonStr1 = JSON.stringify(jsonObj);
 		var jsonArr = [];
 
         priceTotal = 0;
@@ -227,7 +226,7 @@
             {
                 //指定打印设备
                 LODOP.SET_PRINTER_INDEX(i);
-                alert("POS-80C----"+i);
+                //alert(strPName+"----"+i);
             }
         }
 
@@ -257,7 +256,6 @@
         lineTop = hTop+10+10;
         LODOP.ADD_PRINT_LINE(lineTop,20,lineTop,240,2,1);
 
-        //var jsonArr = [];
         for(i =0 ;i < jsonObj.length;i++)
         {
             jsonArr[i] = jsonObj[i];
@@ -409,7 +407,6 @@
 		}
 
         var jsonObj =  JSON.parse(jsonStr);
-        var jsonStr1 = JSON.stringify(jsonObj);
 
         var orderCode;  //订单号
         var barCode;  //条码
@@ -432,7 +429,7 @@
             LODOP.PRINT_INIT("打印控件功能演示");
 
             //获得打印设备个数
-            /*var iCount=LODOP.GET_PRINTER_COUNT();
+            var iCount=LODOP.GET_PRINTER_COUNT();
 
             //指定打印设备
             var strPName;
@@ -443,13 +440,13 @@
                 {
                     //指定打印设备
                     LODOP.SET_PRINTER_INDEX(i);
-                    alert("Gprinter----"+i);
+                    //alert("Gprinter----"+i);
                 }
-            }*/
+            }
 
             var jsonArr = [];
-            i=0;
-            //for(i =0 ;i < jsonObj.length;i++)
+            //i=0;
+            for(i =0 ;i < jsonObj.length;i++)
             {
                 jsonArr[i] = jsonObj[i];
                 console.log(jsonArr[i].id);

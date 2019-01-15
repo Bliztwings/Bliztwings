@@ -807,8 +807,8 @@ public class EwashingFactoryBusinessController {
             list.get(0).setHandOnNo(strPrice);
 
             //把数组序列化成字符串
-            JSONArray json = JSONArray.fromObject(list);
-            OrderInfo = json.toString();
+            //JSONArray json = JSONArray.fromObject(list);
+            //OrderInfo = json.toString();
             OrderInfo = JSONArray.fromObject(list).toString();
         }
         catch (Exception e)

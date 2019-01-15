@@ -69,6 +69,13 @@ public interface EwashingStoreClothesDao extends BaseDao<StoreClothes>{
 	List<StoreClothes> findOrderInfo(StoreClothes storeClothes);
 
 	/**
+	 * 查找水洗唛信息
+	 * @param storeClothes
+	 * @return
+	 */
+	List<StoreClothes> findShuiXiMai(StoreClothes storeClothes);
+
+	/**
 	 * 获取待上挂衣服
 	 * @param clothes
 	 * @return
