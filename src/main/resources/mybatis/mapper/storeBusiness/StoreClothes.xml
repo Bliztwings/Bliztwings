@@ -54,6 +54,7 @@
         <!-- chenyu -->
         <result column="user_name" jdbcType="VARCHAR" property="userName" />
         <result column="order_address" jdbcType="VARCHAR" property="orderAddress" />
+		<result column="bar_code_auto" jdbcType="BIGINT" property="barCodeAuto" />
 	</resultMap>
 	
 	<!-- 单表查询 -->
@@ -183,11 +184,11 @@
 	<insert id="insert" parameterType="map">
 	insert into store_clothes
 	(id,order_code,urgency,bar_code,member_id,card_number,clothes_name,service_type,color,brand,attachment
-	,mobile_phone,telephone,flaw,price,status,service_fee,create_date,create_user_name,store_id,store_name,create_user_id,order_id)
+	,mobile_phone,telephone,flaw,price,status,service_fee,create_date,create_user_name,store_id,store_name,create_user_id,order_id,bar_code_auto)
 	values
 	(#{id},#{orderCode},#{urgency},#{barCode},#{memberId},#{cardNumber},#{clothesName},#{serviceType},#{color},#{brand},
 	#{attachment},#{mobilePhone},#{telephone},#{flaw},#{price},#{status},#{serviceFee},#{createDate},
-	#{createUserName},#{storeId},#{storeName},#{createUserId},#{orderId})
+	#{createUserName},#{storeId},#{storeName},#{createUserId},#{orderId},#{barCodeAuto})
 </insert>
 
 	<!-- 修改  -->
@@ -575,6 +576,18 @@
         </if>
         order by c.create_date desc
     </select>
+
+	<!-- 查询最后一个barcode  -->
+	<select id="findLastBarCode" parameterType="StoreClothes" resultMap="BaseResultMap">
+		SELECT
+		c.id,
+		c.order_code,
+		c.bar_code_auto
+		FROM
+		store_clothes c
+		ORDER BY
+		c.bar_code_auto DESC
+	</select>
 
 	<!-- 查询水洗唛的信息  -->
 	<select id="findShuiXiMai" parameterType="StoreClothes" resultMap="BaseResultMap">

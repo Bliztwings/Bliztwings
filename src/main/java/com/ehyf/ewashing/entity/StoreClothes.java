@@ -268,6 +268,11 @@ public class StoreClothes extends BaseEntity<StoreClothes> {
 	 */
 	private String orderAddress;
 
+	/**
+	 * 条码自动增长
+	 */
+	private int barCodeAuto;
+
 	public String getName() {
 		return userName;
 	}
@@ -542,6 +547,14 @@ public class StoreClothes extends BaseEntity<StoreClothes> {
 
 	public void setBarCode(String barCode) {
 		this.barCode = barCode;
+	}
+
+	public int getBarCodeAuto() {
+		return barCodeAuto;
+	}
+
+	public void setBarCodeAuto(int barCodeAuto) {
+		this.barCodeAuto = barCodeAuto;
 	}
 
 	public String getHandOnArea() {

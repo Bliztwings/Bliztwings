@@ -109,8 +109,11 @@ public class StoreClothesVo implements Serializable {
 	 * 拍照 base 64 文件
 	 */
 	private String baseStr;
-	
-	
+
+	/**
+	 * 条码自动增长
+	 */
+	private int barCodeAuto;
 
 	public String getOrderId() {
 		return orderId;
@@ -182,6 +185,14 @@ public class StoreClothesVo implements Serializable {
 
 	public void setBarCode(String barCode) {
 		this.barCode = barCode;
+	}
+
+	public int getBarCodeAuto() {
+		return barCodeAuto;
+	}
+
+	public void setBarCodeAuto(int barCodeAuto) {
+		this.barCodeAuto = barCodeAuto;
 	}
 
 	public String getUrgency() {

@@ -171,6 +171,7 @@
 						var end =i*3+3;
 						var array =data.dataList.slice(begin,end);
 						var price="";
+						console.log('--len='+array.length);
 						for(var j=0;j<array.length;j++){
 							var dataName=array[j].dataName;
 							var url ="http://ouanv8ds6.bkt.clouddn.com/ewashing/"+array[j].imagePath;
@@ -193,7 +194,18 @@
 									tableStr.append('<div id="'+array[j].id+'" class="onmouseOver" onclick="selectBox(\''+array[j].dataName+'\',\''+array[j].id+'\',\''+array[j].price+'\',\''+array[j].commonPrice+'\',\''+array[j].luxuriesPrice+'\',this)" style="border: 1px solid;border-color:#d3d3d3;width: 100px;height: 100px;text-align: center;vertical-align: middle;cursor: pointer;float: left; margin-top: 5px;line-height: 100px;  margin-left: 8px;">'+dataName+'<font color="red">('+price+')</font>'+'</div>');
 								}
 								
-							}else{
+							}
+							else if(tabNo=='2')
+							{
+								if(jmz.GetLength(dataName)>6){
+									dataName ="<div style='padding-top: 10px;' ><p>"+dataName.substring(0,6)+"</p><p>"+dataName.substring(6,jmz.GetLength(dataName))+"</p></div>";
+									tableStr.append('<div id="'+array[j].id+'"  class="onmouseOver" onclick="selectBox(\''+array[j].dataName+'\',\''+array[j].id+'\',\''+array[j].price+'\',\''+array[j].commonPrice+'\',\''+array[j].luxuriesPrice+'\',this)" style="border: 1px solid;border-color:#d3d3d3;width: 100px;height: 50px;text-align: center;vertical-align: middle;cursor: pointer;float: left; margin-top: 5px;  margin-left: 8px;font-size:18px">'+dataName+'</div>');
+								}else{
+									var bjColor="#C8EBFA";
+									tableStr.append('<div id="'+array[j].id+'"   class="onmouseOver" onclick="selectBox(\''+array[j].dataName+'\',\''+array[j].id+'\',\''+array[j].price+'\',\''+array[j].commonPrice+'\',\''+array[j].luxuriesPrice+'\',this)" style="background-color:'+bjColor+';border: 1px solid;border-color:#d3d3d3;width: 100px;height: 50px;text-align: center;vertical-align: middle;line-height: 50px;cursor: pointer;float: left; margin-top: 5px;  margin-left: 8px;font-size:18px">'+dataName+'</div>');
+								}
+							}
+							else{
 								if(jmz.GetLength(dataName)>6){
 									dataName ="<div style='padding-top: 30px;' ><p>"+dataName.substring(0,6)+"</p><p>"+dataName.substring(6,jmz.GetLength(dataName))+"</p></div>";
 									tableStr.append('<div id="'+array[j].id+'"  class="onmouseOver" onclick="selectBox(\''+array[j].dataName+'\',\''+array[j].id+'\',\''+array[j].price+'\',\''+array[j].commonPrice+'\',\''+array[j].luxuriesPrice+'\',this)" style="border: 1px solid;border-color:#d3d3d3;width: 100px;height: 100px;text-align: center;vertical-align: middle;cursor: pointer;float: left; margin-top: 5px;  margin-left: 8px;">'+dataName+'</div>');
@@ -253,6 +265,7 @@
 		}
 
 		var barCode = $("#barCode").val();
+		barCode = 1;
 		if (barCode == null || barCode == '') {
 			art.dialog.alert("请先设置衣服条码！");
 			return;
@@ -476,6 +489,7 @@
 		var urgency = $("#urgency").val();
 		var serviceType = $('input:radio[name="serviceType"]:checked').val();
 		var sumAmount = $("#sumAmount").val();
+		barCode = '1';
 		if (barCode == null || barCode == '') {
 			art.dialog.alert("条码不能为空！");
 			// 定位光标到条码输入区

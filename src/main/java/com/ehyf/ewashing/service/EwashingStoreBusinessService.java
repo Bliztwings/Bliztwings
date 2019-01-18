@@ -148,6 +148,7 @@ public class EwashingStoreBusinessService{
 		clothes.setStatus("0");
 		clothes.setOrderId(order.getId());
 		clothes.setOrderCode(storeClothesVo.getOrderCode());
+		clothes.setBarCodeAuto(storeClothesVo.getBarCodeAuto());
 		int count = clothesDao.insert(clothes);
 		if (count <= 0) {
 			throw new AppExection("收取衣服失败");
@@ -1321,6 +1322,12 @@ public class EwashingStoreBusinessService{
 		return list;
 	}
 
+	//查询最后一个barcode
+	public List<StoreClothes> findLastBarCode(StoreClothes storeClothes) {
+
+		List<StoreClothes> list = clothesDao.findLastBarCode(storeClothes);
+		return list;
+	}
 
 	public List<StoreClothes> findHandonClothes(StoreClothes clothes) {
 		List<StoreClothes> list = clothesDao.findHandonClothes(clothes);

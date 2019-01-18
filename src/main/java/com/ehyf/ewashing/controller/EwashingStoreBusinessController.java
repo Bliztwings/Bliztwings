@@ -185,11 +185,13 @@ public class EwashingStoreBusinessController {
 	@ResponseBody
 	public String saveSoringClothes(HttpServletRequest req, HttpSession session, StoreClothesVo storeClothesVo, Model model) {
 
+		int barCodeAuto = 0;
 		SecurityUser loginUser = (SecurityUser) req.getAttribute(Constants.CURRENT_USER);
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			model.asMap().clear();
 			String barCode =storeClothesVo.getBarCode();
+            barCode = "1";
 			if(com.ehyf.ewashing.util.StringUtils.isEmptyString(barCode)){
 				model.addAttribute("resultCode", "0");
 				model.addAttribute("resultMsg", "条码不能为空");
@@ -201,15 +203,36 @@ public class EwashingStoreBusinessController {
 				model.addAttribute("resultMsg", "金额不能为空");
 				return JSONObject.toJSONString(model);
 			}*/
+
+			//查找衣服的最后一个记录的条码值
 			StoreClothes c = new StoreClothes();
 			c.setBarCode(barCode);
-			List<StoreClothes> list =storeBusiness.findClothes(c);
+			List<StoreClothes> list =storeBusiness.findLastBarCode(c);
+            if (CollectionUtils.isEmpty(list))
+            {
+                model.addAttribute("resultCode", "0");
+                model.addAttribute("resultMsg", "保存失败，失败代码1013！");
+                return JSONObject.toJSONString(model);
+            }
+            //barCodeAuto = list.get(0).getBarCodeAuto();
+
+			//条码加1
+			barCodeAuto = list.get(0).getBarCodeAuto()+1;
+			barCode = Long.toString(barCodeAuto);
+            storeClothesVo.setBarCode(barCode);
+            storeClothesVo.setBarCodeAuto(barCodeAuto);
+
+			//存入数据库
+			//StoreClothes c = new StoreClothes();
+			//c.setBarCode(barCode);
+			//List<StoreClothes> list =storeBusiness.findClothes(c);
 			
-			if(!CollectionUtils.isEmpty(list)){
-				model.addAttribute("resultCode", "0");
-				model.addAttribute("resultMsg", "条码已经存在");
-				return JSONObject.toJSONString(model);
-			}
+//			if(!CollectionUtils.isEmpty(list)){
+//				model.addAttribute("resultCode", "0");
+//				model.addAttribute("resultMsg", "条码已经存在");
+//				return JSONObject.toJSONString(model);
+//			}
+
 			boolean flag =storeBusiness.saveSoringClothes(loginUser, storeClothesVo);
 			if(flag){
 				model.addAttribute("queryKey", storeClothesVo.getQueryKey());
