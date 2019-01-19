@@ -129,11 +129,13 @@ public class EwashingStoreBusinessController {
 	@ResponseBody
 	public String saveClothes(HttpServletRequest req, HttpSession session, StoreClothesVo storeClothesVo, Model model) {
 
+		int barCodeAuto = 0;
 		SecurityUser loginUser = (SecurityUser) req.getAttribute(Constants.CURRENT_USER);
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			model.asMap().clear();
 			String barCode =storeClothesVo.getBarCode();
+			barCode = "1";
 			if(com.ehyf.ewashing.util.StringUtils.isEmptyString(barCode)){
 				model.addAttribute("resultCode", "0");
 				model.addAttribute("resultMsg", "条码不能为空");
@@ -145,15 +147,32 @@ public class EwashingStoreBusinessController {
 				model.addAttribute("resultMsg", "金额不能为空");
 				return JSONObject.toJSONString(model);
 			}
+
+			//查找衣服的最后一个记录的条码值
 			StoreClothes c = new StoreClothes();
 			c.setBarCode(barCode);
-			List<StoreClothes> list =storeBusiness.findClothes(c);
-			
-			if(!CollectionUtils.isEmpty(list)){
+
+			List<StoreClothes> list =storeBusiness.findLastBarCode(c);
+			if (CollectionUtils.isEmpty(list))
+			{
 				model.addAttribute("resultCode", "0");
-				model.addAttribute("resultMsg", "条码已经存在");
+				model.addAttribute("resultMsg", "保存失败，失败代码1013！");
 				return JSONObject.toJSONString(model);
 			}
+
+			//条码加1
+			barCodeAuto = list.get(0).getBarCodeAuto()+1;
+			barCode = Long.toString(barCodeAuto);
+			storeClothesVo.setBarCode(barCode);
+			storeClothesVo.setBarCodeAuto(barCodeAuto);
+
+//			List<StoreClothes> list =storeBusiness.findClothes(c);
+//			if(!CollectionUtils.isEmpty(list)){
+//				model.addAttribute("resultCode", "0");
+//				model.addAttribute("resultMsg", "条码已经存在");
+//				return JSONObject.toJSONString(model);
+//			}
+
 			boolean flag =storeBusiness.saveClothes(loginUser, storeClothesVo);
 			if(flag){
 				model.addAttribute("queryKey", storeClothesVo.getQueryKey());
@@ -198,11 +217,11 @@ public class EwashingStoreBusinessController {
 				return JSONObject.toJSONString(model);
 			}
 			
-			/*if(storeClothesVo.getSumAmount()==null || storeClothesVo.getSumAmount().compareTo(BigDecimal.ZERO)==0 || storeClothesVo.getSumAmount().compareTo(BigDecimal.ZERO)==-1){
+			if(storeClothesVo.getSumAmount()==null || storeClothesVo.getSumAmount().compareTo(BigDecimal.ZERO)==0 || storeClothesVo.getSumAmount().compareTo(BigDecimal.ZERO)==-1){
 				model.addAttribute("resultCode", "0");
 				model.addAttribute("resultMsg", "金额不能为空");
 				return JSONObject.toJSONString(model);
-			}*/
+			}
 
 			//查找衣服的最后一个记录的条码值
 			StoreClothes c = new StoreClothes();
@@ -525,7 +544,16 @@ public class EwashingStoreBusinessController {
 	public String queryMember(HttpServletRequest req, HttpSession session, Model model) {
 		String queryKey = req.getParameter("queryKey");
 		model.asMap().clear();
+
 		SecurityUser loginUser = (SecurityUser) req.getAttribute(Constants.CURRENT_USER);
+
+		//O2O收衣服时，让其门店对应"O2O门店"
+		String id = "";
+		String username = loginUser.getUsername();
+		Boolean ret = username.equals("o2o");
+		if (ret==true) id = "6c93ad2b66b74dfa95ce470ebb551c06";
+		else id = loginUser.getEwashingStore().getId();
+
 		try {
 			// 会员信息
 			model.addAttribute("queryKey", queryKey);
@@ -539,7 +567,7 @@ public class EwashingStoreBusinessController {
 			StoreClothes clothes = new StoreClothes();
 			clothes.setQueryKey(member.getMemberId());
 			clothes.setStatus("0");
-			clothes.setStoreId(loginUser.getEwashingStore().getId());
+			clothes.setStoreId(id);
 			List<StoreClothes> list = storeBusiness.findClothesByMobileOrCardNumber(clothes);
 			if (!CollectionUtils.isEmpty(list)) {
 				model.addAttribute("orderCode", list.get(0).getOrderCode());

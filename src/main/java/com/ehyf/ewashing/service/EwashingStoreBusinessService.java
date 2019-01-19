@@ -312,6 +312,7 @@ public class EwashingStoreBusinessService{
 		clothes.setAttachment(storeClothesVo.getAttachment());
 		clothes.setStatus("0");
 		clothes.setOrderCode(storeClothesVo.getOrderCode());
+		clothes.setBarCodeAuto(storeClothesVo.getBarCodeAuto());
 		int count = clothesDao.insert(clothes);
 		if (count <= 0) {
 			throw new AppExection("收取衣服失败");

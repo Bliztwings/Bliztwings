@@ -254,6 +254,7 @@
 		}
 
 		var barCode = $("#barCode").val();
+		barCode = "1";
 		if (barCode == null || barCode == '') {
 			art.dialog.alert("请先设置衣服条码！");
 			return;
@@ -477,6 +478,7 @@
 		var urgency = $("#urgency").val();
 		var serviceType = $('input:radio[name="serviceType"]:checked').val();
 		var sumAmount = $("#sumAmount").val();
+		barCode = "1";
 		if (barCode == null || barCode == '') {
 			art.dialog.alert("条码不能为空！");
 			// 定位光标到条码输入区

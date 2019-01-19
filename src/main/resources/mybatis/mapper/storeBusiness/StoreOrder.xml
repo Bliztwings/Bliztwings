@@ -286,7 +286,7 @@
 		 insert into store_order
  		(id ,store_id,store_name,order_code,locations,card_number,member_id,member_name,mobile_phone,telephone,order_status,order_type,order_date,pay_status,clothes_count,receivable_amount,paid_amount,create_date,create_user_name,create_user_id) 
 		 values 
- 		(#{id},#{storeId},#{storeName},#{orderCode},GeomFromText(#{locationString,jdbcType=OTHER}),#{cardNumber},#{memberId},#{memberName},#{mobilePhone},#{telephone},#{orderStatus},#{orderType},#{orderDate},#{payStatus},#{clothesCount},#{receivableAmount},#{paidAmount},#{createDate},#{createUserName},#{createUserId}) 
+ 		(#{id},#{storeId},#{storeName},#{orderCode},st_GeomFromText(#{locationString,jdbcType=OTHER}),#{cardNumber},#{memberId},#{memberName},#{mobilePhone},#{telephone},#{orderStatus},#{orderType},#{orderDate},#{payStatus},#{clothesCount},#{receivableAmount},#{paidAmount},#{createDate},#{createUserName},#{createUserId})
 	</insert>
 	
 	<insert id="placeOrder" parameterType="map">
