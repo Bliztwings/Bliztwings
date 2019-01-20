@@ -1,6 +1,7 @@
 package com.ehyf.ewashing.controller;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -141,7 +142,7 @@ public class EwashingStoreBusinessController {
 				model.addAttribute("resultMsg", "条码不能为空");
 				return JSONObject.toJSONString(model);
 			}
-			
+
 			if(storeClothesVo.getSumAmount()==null || storeClothesVo.getSumAmount().compareTo(BigDecimal.ZERO)==0 || storeClothesVo.getSumAmount().compareTo(BigDecimal.ZERO)==-1){
 				model.addAttribute("resultCode", "0");
 				model.addAttribute("resultMsg", "金额不能为空");
@@ -551,7 +552,8 @@ public class EwashingStoreBusinessController {
 		String id = "";
 		String username = loginUser.getUsername();
 		Boolean ret = username.equals("o2o");
-		if (ret==true) id = "6c93ad2b66b74dfa95ce470ebb551c06";
+		//if (ret==true) id = "6c93ad2b66b74dfa95ce470ebb551c06";  //本地数据库
+		if (ret==true) id = "7cc64f488aa84f2d90f23f442362f83f";  //服务器数据
 		else id = loginUser.getEwashingStore().getId();
 
 		try {
@@ -586,7 +588,83 @@ public class EwashingStoreBusinessController {
 			return JSONObject.toJSONString(model);
 		}
 	}
-	
+
+	/**
+	 * 查询门店收衣的列表，准备打印水洗唛
+	 *
+	 * @param req
+	 * @param session
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/queryStoreShuiXiMai")
+	@ResponseBody
+	public String queryStoreShuiXiMai(HttpServletRequest req,Model model)
+	{
+		String queryKey = req.getParameter("queryKey");
+		model.asMap().clear();
+
+		int i = 0;
+		String OrderInfo = "";
+		SecurityUser loginUser = (SecurityUser) req.getAttribute(Constants.CURRENT_USER);
+
+		//O2O收衣服时，让其门店对应"O2O门店"
+		String id = "";
+		String username = loginUser.getUsername();
+		Boolean ret = username.equals("o2o");
+		if (ret==true) id = "6c93ad2b66b74dfa95ce470ebb551c06";  //本地数据库
+			//if (ret==true) id = "7cc64f488aa84f2d90f23f442362f83f";  //服务器数据
+		else id = loginUser.getEwashingStore().getId();
+
+		try {
+			// 会员信息
+			model.addAttribute("queryKey", queryKey);
+			MemberCard member = memberCardService.queryMemberByCardOrMobileForBacken(null, queryKey);
+			if (member == null) {
+				model.addAttribute("resultCode", "0");
+				model.addAttribute("resultMsg", "会员不存在");
+				return "ewashing/storeBusiness/receive";
+			}
+			// 会员衣服信息
+			StoreClothes clothes = new StoreClothes();
+			clothes.setQueryKey(member.getMemberId());
+			clothes.setStatus("0");
+			clothes.setStoreId(id);
+			List<StoreClothes> list = storeBusiness.findListReceiveClothes(clothes);
+			//List<StoreClothes> list = storeBusiness.findClothesByMobileOrCardNumber(clothes);
+			if (CollectionUtils.isEmpty(list))
+			{
+				return OrderInfo;
+			}
+
+			for (i = 0; i < list.size(); i++)
+			{
+				String strtakddate;
+				Date takdate = list.get(i).getTakingDate();
+				if(takdate==null)
+				{
+					list.get(i).setServiceType("");
+					continue;
+				};
+
+				//日期格式，精确到日 2017-4-16
+				DateFormat df1 = DateFormat.getDateInstance();
+				strtakddate =df1.format(takdate);
+				//用“服务类型”字段来放取衣日期
+				list.get(i).setServiceType(strtakddate);
+			}
+
+			//把数组序列化成字符串
+			//JSONArray json = JSONArray.fromObject(list);
+			//OrderInfo = json.toString();
+			OrderInfo = net.sf.json.JSONArray.fromObject(list).toString();
+			return OrderInfo;
+		}
+		catch (Exception e) {
+			return OrderInfo;
+		}
+	}
+
 	@RequestMapping(value = "/showAttach", method = { RequestMethod.POST, RequestMethod.GET })
 	public String showAttach(HttpServletRequest req, HttpSession session, Model model) {
 		String clothesId = req.getParameter("clothesId");

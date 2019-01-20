@@ -523,6 +523,7 @@
 			dataType : "json",
 			success : function(data, textStatus) {
 				if (data.resultCode == "0") {
+					console.log("-------"+data.resultMsg);
 					art.dialog.alert(data.resultMsg);
 					cancle();
 				} else {

@@ -157,22 +157,25 @@
 				 and data_name LIKE CONCAT('%','${queryKey}','%' )
 			</if>
 
-			ORDER BY convert(data_name using gbk) asc
 
-		<!--<if test="dataType == 1">
-			 <if test ="serviceType==1" >
-				 order by price asc
-			 </if>
 
-			 <if test ="serviceType==2" >
-				 order by common_price asc
-			 </if>
+			<if test="dataType == 1">
+				 <if test ="serviceType==1" >
+					 order by price asc
+				 </if>
 
-			 <if test ="serviceType==3" >
-				 order by luxuries_price asc
-			 </if>
+				 <if test ="serviceType==2" >
+					 order by common_price asc
+				 </if>
 
-		</if>-->
+				 <if test ="serviceType==3" >
+					 order by luxuries_price asc
+				 </if>
+			</if>
+
+			<if test="dataType != 1">
+				ORDER BY convert(data_name using gbk) asc
+			</if>
 
 </select>
 

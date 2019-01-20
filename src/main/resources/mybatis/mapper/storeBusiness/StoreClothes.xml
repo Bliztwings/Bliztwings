@@ -375,7 +375,96 @@
 			
 			order by c.create_date desc
 	</select>
-	
+
+	<!-- 查询9001的收衣列表  -->
+	<select id="findListReceiveClothes" parameterType="StoreClothes" resultMap="BaseResultMap">
+		select
+		c.id,
+		c.order_code,
+		o.id as order_id,
+		c.bar_code,
+		c.urgency,
+		c.member_id,
+		m.name as member_name,
+		m.address as order_address,
+		c.card_number,
+		d.data_name as clothes_name,
+		c.service_type,
+		d1.data_name as color,
+		d2.data_name as brand,
+		c.attachment,
+		c.flaw,
+		c.mobile_phone,
+		c.telephone,
+		c.price,
+		c.status,
+		c.service_fee,
+		c.create_date,
+		c.create_user_id,
+		c.create_user_name,
+		c.update_date,
+		c.update_user_name,
+		c.update_user_id,
+		o.place_order_date as takingDate,
+		c.store_id,
+		s.store_name,
+		a.area as handOnArea,
+		n.hand_on_no as handOnNo,
+		DATE_FORMAT(cf.opt_date,'%Y-%c-%d %H:%i:%s') as handOnDateStr,
+		o.pay_status as payStatus,
+		fa.area as factoryHandOnArea,
+		fn.hand_on_no as factoryHandOnNo,
+		o.clothes_count,
+		wd.send_number,
+		DATE_FORMAT(w.send_date,'%Y-%c-%d %H:%i:%s') as sendDateStr,
+		fd.leave_factory_number as leaveFactoryNumber,
+		DATE_FORMAT(lf.leave_date,'%Y-%c-%d %H:%i:%s') as leaveDateStr
+		from store_clothes c
+		LEFT JOIN store s on c.store_id =s.id
+		LEFT JOIN store_order o on c.order_code =o.order_code
+		LEFT JOIN store_data_dictionary d on c.clothes_name =d.id
+		LEFT JOIN store_data_dictionary d1 on c.color =d1.id
+		LEFT JOIN store_data_dictionary d2 on c.brand =d2.id
+		LEFT JOIN member m on c.member_id =m.id
+
+		LEFT JOIN store_hand_on_area a on c.hand_on_area =a.id and a.hand_type='1'
+		LEFT JOIN store_hand_on_no n on c.hand_on_no =n.id and n.hand_type='1'
+		LEFT JOIN store_clothes_flow cf on c.id =cf.clothes_id and cf.clothes_status='15'
+		LEFT JOIN store_hand_on_area fa on c.factory_hand_on_area =fa.id and fa.hand_type=CASE WHEN o.app_id = 'wx614b63f73b55d7ef' THEN '3'  WHEN o.app_id = 'wxc6097b5bf9ba801d' THEN '4'  ELSE '2' END
+		LEFT JOIN store_hand_on_no fn on c.factory_hand_on_no =fn.id and fn.hand_type=CASE WHEN o.app_id = 'wx614b63f73b55d7ef' THEN '3'  WHEN o.app_id = 'wxc6097b5bf9ba801d' THEN '4'  ELSE '2' END
+		LEFT JOIN store_clothes_flow cf1 on c.id =cf1.clothes_id and cf1.clothes_status='16'
+
+		LEFT JOIN send_washing_detail wd on c.id =wd.clothes_id
+		LEFT JOIN send_washing w on w.send_number =wd.send_number
+		LEFT JOIN leave_factory_detail fd on c.id =fd.clothes_id
+		LEFT JOIN leave_factory lf on fd.leave_factory_number =lf.leave_factory_number
+		where 1=1
+		<if test="barCode != null and barCode != ''">
+			and c.bar_code = #{barCode}
+		</if>
+		<if test="storeId != null and storeId != ''">
+			and c.store_id = #{storeId}
+		</if>
+
+		<if test="status != null and status != ''">
+			and c.status = #{status}
+		</if>
+
+		<if test="orderCode != null and orderCode != ''">
+			and c.order_code = #{orderCode}
+		</if>
+
+		<if test="memberName != null and memberName != ''">
+			and m.name=#{memberName}
+		</if>
+
+		<if test="mobilePhone != null and mobilePhone != ''">
+			and c.mobile_phone=#{mobilePhone}
+		</if>
+
+		order by c.create_date desc
+	</select>
+
 	<!-- 分页查询  -->
 	<select id="findListO2o" parameterType="StoreClothes" resultMap="BaseResultMap">
 		 select
@@ -553,7 +642,7 @@
         d.data_name as clothes_name,
         e.data_name as color,
         c.price,
-        c.brand,
+		f.data_name as brand,
         c.flaw,
         c.status,
         c.service_fee,
@@ -570,6 +659,7 @@
         LEFT JOIN member m ON c.member_id = m.id
         LEFT JOIN store_data_dictionary d ON c.clothes_name = d.id
         LEFT JOIN store_data_dictionary e ON c.color = e.id
+		LEFT JOIN store_data_dictionary f ON c.brand = f.id
         where 1=1
         <if test="orderCode != null and orderCode != ''">
             and c.order_code = #{orderCode}
@@ -597,11 +687,11 @@
 		c.bar_code,
 		m.NAME,
 		m.mobile_phone,
-		e.data_name as clothes_name,
-		d.data_name as color,
+		d1.data_name as clothes_name,
+		d2.data_name as color,
+		d3.data_name as brand,
+		d4.data_name as flaw,
 		c.price,
-		c.brand,
-		c.flaw,
 		c.STATUS,
 		o.place_order_date as takingDate,
 		c.service_fee,
@@ -617,8 +707,10 @@
 		LEFT JOIN store s ON c.store_id = s.id
 		LEFT JOIN store_order o ON c.order_code = o.order_code
 		LEFT JOIN member m ON c.member_id = m.id
-		LEFT JOIN store_data_dictionary d ON c.color = d.id
-		LEFT JOIN store_data_dictionary e ON c.clothes_name = e.id
+		LEFT JOIN store_data_dictionary d1 ON c.clothes_name = d1.id
+		LEFT JOIN store_data_dictionary d2 ON c.color = d2.id
+		LEFT JOIN store_data_dictionary d3 ON c.brand = d3.id
+		LEFT JOIN store_data_dictionary d4 ON c.flaw = d4.id
 	WHERE
 		1 = 1
 		<if test="orderCode != null and orderCode != ''">

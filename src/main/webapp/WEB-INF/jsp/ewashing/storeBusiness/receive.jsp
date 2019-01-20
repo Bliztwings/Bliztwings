@@ -21,7 +21,14 @@
 	<link type="text/css" href="<%=basePath%>/zui-1.5.0/lib/datatable/zui.datatable.css" rel="stylesheet" />
 	<script src="<%=basePath%>/js/jquery/jquery.form.js" type="text/javascript"></script>
 	<script type="text/javascript" src="<%=basePath%>/js/jquery/jquery.json-2.2.js"></script>
-	
+
+	<!--  打印控件  -->
+	<script language="javascript" src="<%=basePath%>/js/LodopFuncs.js"></script>
+
+	<object id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+		<embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0 pluginspage="install_lodop32.exe"></embed>
+	</object>
+
 	<!--  art.dialog  -->
 	<link href="<%=basePath%>/js/artDialog4.1.7/skins/blue.css" rel="stylesheet" type="text/css" />
 	<script src="<%=basePath%>/js/artDialog4.1.7/artDialog.js" type="text/javascript"></script>
@@ -168,7 +175,177 @@
 			}
 		});
 	}
-	
+
+	// 查询水洗唛数据
+	function QueryShuiXiMai()
+	{
+		var queryKey =$("#queryKey").val();
+		var mobilePhone =$("#mobilePhone").val();
+
+		if(mobilePhone ==null || mobilePhone ==""){
+			art.dialog.alert("找不到订单对应的会员！");
+			return;
+		}
+
+		try
+		{
+			var LODOP=getLodop();
+			if (LODOP.VERSION) {
+				if (LODOP.CVERSION)
+					console.log("当前有C-Lodop云打印可用!\n C-Lodop版本:"+LODOP.CVERSION+"(内含Lodop"+LODOP.VERSION+")");
+				else
+					console.log("本机已成功安装了Lodop控件！\n 版本号:"+LODOP.VERSION);
+
+			};
+		}
+		catch(err)
+		{
+			alert("打印机异常，异常代码1013！！");
+			return;
+		}
+
+		// 执行ajax
+		$.ajax({
+			type: 'GET',
+			url: '<%=basePath%>/storeBusiness/queryStoreShuiXiMai?queryKey='+queryKey,
+			dataType : "text",  // 返回的数据格式
+			cache: false,
+			timeout: 6000,
+			success: function(data)
+			{
+				PrintShuiXiMai(data);
+				//console.log(data);
+			},
+			error: function()
+			{
+				//alert("ajax异常！");
+				console.log('ajax异常！');
+			}
+		});
+
+		// 打印水洗唛
+		function PrintShuiXiMai(datas)
+		{
+			var len = 0;
+			var jsonStr = datas;
+
+			len = jsonStr.length;
+			if(len==0)
+			{
+				alert("没有衣服数据可打印");
+				return;
+			}
+
+			console.log('水洗唛');
+			try
+			{
+				var i= 0;
+				var len = 0;
+				var jsonObj =  JSON.parse(jsonStr);
+				var jsonArr = [];
+
+				var barCode;  //条码
+				var userName;  //用户
+				var mobilePhone;  //用户手机号码
+				var clothesName;  //衣服名称
+				var color;  //颜色
+				var flaw;  //瑕疵
+				var address;  //订单地址
+				var takingDate;  //取衣日期
+
+				var hTop=10;
+				var rowHeight=16; //行距
+				var LODOP=getLodop();
+
+				//打印初始化
+				LODOP.PRINT_INIT("打印控件功能演示");
+
+				//获得打印设备个数
+				var iCount=LODOP.GET_PRINTER_COUNT();
+
+				//指定打印设备
+				print = 0;
+				var strPName;
+				for(i=0;i<iCount;i++)
+				{
+					strPName = LODOP.GET_PRINTER_NAME(i);
+					if( strPName.indexOf("GK888t")!=-1 )
+					{
+						//指定打印设备
+						LODOP.SET_PRINTER_INDEX(i);
+						print = 1;
+						//alert(strPName+"----"+i);
+					}
+				}
+
+				if(print!=1)
+				{
+					//alert("没有找到打印机");
+					//return;
+				}
+
+				for(i =0 ;i < jsonObj.length;i++)
+				{
+					jsonArr[i] = jsonObj[i];
+					barCode = jsonArr[i].barCode;  //条码
+					userName = jsonArr[i].memberName;  //用户名
+					mobilePhone = jsonArr[i].mobilePhone;  //用户手机号码
+					clothesName = jsonArr[i].clothesName;  //衣服名称
+					color = jsonArr[i].color;  //颜色
+					flaw = jsonArr[i].flaw;  //瑕疵
+					address = jsonArr[i].orderAddress;  //订单地址
+					takingDate = jsonArr[i].serviceType;  //取衣日期
+
+					len = clothesName.length;
+					if(len>11)
+					{
+						clothesName = clothesName.substr(0,11)+"...";
+					}
+
+					hTop=10;
+					rowHeight=16; //行距
+
+					//条码
+					LODOP.SET_PRINT_STYLE("FontSize", 8);
+					LODOP.ADD_PRINT_BARCODE(hTop, 200, 210, 50, "128Auto", barCode);
+
+					//LODOP.SET_PRINT_STYLE("Bold",1);  //粗体
+					LODOP.SET_PRINT_STYLE("FontSize", 10);  //字体大小
+					LODOP.ADD_PRINT_TEXT(hTop, 6, 200, 60, "门店：浣衣坊洗衣");
+					hTop += rowHeight;
+					//LODOP.ADD_PRINT_TEXT(hTop,6,400,60,"客户："+userName+"("+mobilePhone.substr(0,3)+"****"+mobilePhone.substr(7,4)+")");
+					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "客户：" + userName + "(" + mobilePhone + ")");
+					hTop += rowHeight;
+					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "衣物：" + clothesName);
+					hTop += rowHeight;
+					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "瑕疵：" + flaw);
+					hTop += rowHeight;
+					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "颜色：" + color);
+					LODOP.ADD_PRINT_TEXT(hTop, 230, 400, 60, "取衣日期：" + takingDate);
+					hTop += rowHeight;
+					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "地址：" + address);
+
+					//设定纸张大小;
+					LODOP.SET_PRINT_PAGESIZE(1, "110mm", "40mm", "CreateCustomPage");
+
+					//设计
+					//LODOP.PRINT_DESIGN();
+					//预览
+					LODOP.PREVIEW();
+					//直接打印
+					//LODOP.PRINT();
+					//选择打印机，再打印
+					//LODOP.PRINTA();
+				}
+			}
+			catch(err)
+			{
+				alert("打印机异常，异常代码1015！！");
+			}
+
+		}
+	}
+
 	//注册键盘事件
 	document.onkeydown = function(e) {
 	    //捕捉回车事件
@@ -276,6 +453,7 @@
 						<div class="input-group" style="padding-left: 10px;">
 							<button class="btn btn-primary" type="button" id="queryMember11" onclick="queryMember()" style="margin-right: 10px;">查  询</button>
 							<button class="btn btn-primary" type="button" id="transLogQueryBtn" onclick="addMember()" style="margin-right: 10px;">增加客户信息</button>
+							<button class="btn btn-primary" type="button" id="transLogQueryBtn2" onclick="QueryShuiXiMai()" style="margin-right: 10px;">打印水洗唛</button>
 						</div>
 					</td>
 				</tr>

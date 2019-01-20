@@ -389,6 +389,19 @@ public class EwashingStoreBusinessService{
 		return list;
 	}
 
+	/**
+	 * 获取用户的收衣列表数据，准备打印水洗唛
+	 *
+	 * @param storeId
+	 * @return
+	 */
+	public List<StoreClothes> findListReceiveClothes(StoreClothes storeClothes) {
+
+		List<StoreClothes> list = clothesDao.findListReceiveClothes(storeClothes);
+		convertList(list);
+		return list;
+	}
+
 	private void convertList(List<StoreClothes> list) {
 
 		if (!CollectionUtils.isEmpty(list)) {

@@ -16,6 +16,13 @@ public interface BaseDao<T> {
 	 * @return
 	 */
 	public List<T> findList(T entity);
+
+	/**
+	 * 获取用户的收衣列表数据，准备打印水洗唛
+	 * @param entity
+	 * @return
+	 */
+	public List<T> findListReceiveClothes(T entity);
 	
 	/**
 	 * 插入数据
