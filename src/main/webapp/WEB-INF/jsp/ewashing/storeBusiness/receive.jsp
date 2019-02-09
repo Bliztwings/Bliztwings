@@ -302,6 +302,12 @@
 						clothesName = clothesName.substr(0,11)+"...";
 					}
 
+					len = flaw.length;
+					if(len>11)
+					{
+						flaw = flaw.substr(0,11)+"...";
+					}
+
 					hTop=10;
 					rowHeight=16; //行距
 
@@ -311,7 +317,7 @@
 
 					//LODOP.SET_PRINT_STYLE("Bold",1);  //粗体
 					LODOP.SET_PRINT_STYLE("FontSize", 10);  //字体大小
-					LODOP.ADD_PRINT_TEXT(hTop, 6, 200, 60, "门店：浣衣坊洗衣");
+					LODOP.ADD_PRINT_TEXT(hTop, 6, 200, 60, "浣衣坊洗衣");
 					hTop += rowHeight;
 					//LODOP.ADD_PRINT_TEXT(hTop,6,400,60,"客户："+userName+"("+mobilePhone.substr(0,3)+"****"+mobilePhone.substr(7,4)+")");
 					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "客户：" + userName + "(" + mobilePhone + ")");
@@ -321,7 +327,7 @@
 					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "瑕疵：" + flaw);
 					hTop += rowHeight;
 					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "颜色：" + color);
-					LODOP.ADD_PRINT_TEXT(hTop, 230, 400, 60, "取衣日期：" + takingDate);
+					//LODOP.ADD_PRINT_TEXT(hTop, 230, 400, 60, "取衣日期：" + takingDate);
 					hTop += rowHeight;
 					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "地址：" + address);
 
@@ -331,9 +337,9 @@
 					//设计
 					//LODOP.PRINT_DESIGN();
 					//预览
-					LODOP.PREVIEW();
+					//LODOP.PREVIEW();
 					//直接打印
-					//LODOP.PRINT();
+					LODOP.PRINT();
 					//选择打印机，再打印
 					//LODOP.PRINTA();
 				}

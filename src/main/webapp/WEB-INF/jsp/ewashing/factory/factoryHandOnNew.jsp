@@ -342,9 +342,9 @@
         LODOP.SET_PRINT_PAGESIZE(3,"80mm","4.5mm","CreateCustomPage");
 
         //预览
-        LODOP.PREVIEW();
+        //LODOP.PREVIEW();
         //直接打印
-        //LODOP.PRINT();
+        LODOP.PRINT();
         //选择打印机，再打印
         //LODOP.PRINTA();*/
     }
@@ -477,9 +477,9 @@
                 //设计
                 //LODOP.PRINT_DESIGN();
                 //预览
-                LODOP.PREVIEW();
+                //LODOP.PREVIEW();
 				//直接打印
-                //LODOP.PRINT();
+                LODOP.PRINT();
 				//选择打印机，再打印
                 //LODOP.PRINTA();
             }

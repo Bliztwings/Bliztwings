@@ -145,7 +145,7 @@
 	
 	// ajax 循环获取tab 数据
 	function getDate(tabNo,dataQueryKey){
-		
+        console.log("--getDate----");
 		var serviceType=$('input:radio[name="serviceType"]:checked').val();
 		
 		jQuery.ajax({
@@ -193,10 +193,10 @@
 								else{
 									tableStr.append('<div id="'+array[j].id+'" class="onmouseOver" onclick="selectBox(\''+array[j].dataName+'\',\''+array[j].id+'\',\''+array[j].price+'\',\''+array[j].commonPrice+'\',\''+array[j].luxuriesPrice+'\',this)" style="border: 1px solid;border-color:#d3d3d3;width: 100px;height: 100px;text-align: center;vertical-align: middle;cursor: pointer;float: left; margin-top: 5px;line-height: 100px;  margin-left: 8px;">'+dataName+'<font color="red">('+price+')</font>'+'</div>');
 								}
-								
 							}
 							else if(tabNo=='2')
 							{
+                                console.log("--dataName----"+dataName);
 								if(jmz.GetLength(dataName)>6){
 									dataName ="<div style='padding-top: 10px;' ><p>"+dataName.substring(0,6)+"</p><p>"+dataName.substring(6,jmz.GetLength(dataName))+"</p></div>";
 									tableStr.append('<div id="'+array[j].id+'"  class="onmouseOver" onclick="selectBox(\''+array[j].dataName+'\',\''+array[j].id+'\',\''+array[j].price+'\',\''+array[j].commonPrice+'\',\''+array[j].luxuriesPrice+'\',this)" style="border: 1px solid;border-color:#d3d3d3;width: 100px;height: 50px;text-align: center;vertical-align: middle;cursor: pointer;float: left; margin-top: 5px;  margin-left: 8px;font-size:18px">'+dataName+'</div>');

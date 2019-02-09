@@ -157,8 +157,6 @@
 				 and data_name LIKE CONCAT('%','${queryKey}','%' )
 			</if>
 
-
-
 			<if test="dataType == 1">
 				 <if test ="serviceType==1" >
 					 order by price asc

@@ -70,7 +70,17 @@
                   height : 690,
                   lock : true
               });
-          }
+        }
+
+        // 团体洗涤
+        function GroupReceive() {
+            art.dialog.open( '<%=basePath%>/storeBusiness/receive', {
+                title : '团体洗涤',
+                width : '100%',
+                height : 690,
+                lock : true
+            });
+        }
 	  	
 	  	// 个人计件
 	  	function clothesStatistics(){
@@ -400,6 +410,13 @@
                                 onmouseover="this.style.backgroundColor='#aca8d4'"
                                 onmouseout="this.style.backgroundColor='#5236ac'">出厂</div>
                         </td>
+                        <%--<td>--%>
+                            <%--<div class="factory-left-td-div"--%>
+                                 <%--style="background-color: #f82a10; position: relative;"--%>
+                                 <%--onclick="GroupReceive()"--%>
+                                 <%--onmouseover="this.style.backgroundColor='#aca8d4'"--%>
+                                 <%--onmouseout="this.style.backgroundColor='#5236ac'">团体洗涤</div>--%>
+                        <%--</td>--%>
                     </tr>
                 </table>
 

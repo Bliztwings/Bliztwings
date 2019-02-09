@@ -546,14 +546,15 @@ public class EwashingStoreBusinessController {
 		String queryKey = req.getParameter("queryKey");
 		model.asMap().clear();
 
+		EwashingStore ewashingStore;
 		SecurityUser loginUser = (SecurityUser) req.getAttribute(Constants.CURRENT_USER);
 
 		//O2O收衣服时，让其门店对应"O2O门店"
 		String id = "";
 		String username = loginUser.getUsername();
 		Boolean ret = username.equals("o2o");
-		//if (ret==true) id = "6c93ad2b66b74dfa95ce470ebb551c06";  //本地数据库
-		if (ret==true) id = "7cc64f488aa84f2d90f23f442362f83f";  //服务器数据
+		ewashingStore = loginUser.getEwashingStore();
+		if(ewashingStore==null) id = "7cc64f488aa84f2d90f23f442362f83f";
 		else id = loginUser.getEwashingStore().getId();
 
 		try {
@@ -946,7 +947,6 @@ public class EwashingStoreBusinessController {
 		}
 	}
 	
-	
 	/**
 	 * 送洗页面
 	 * @param req
@@ -957,7 +957,6 @@ public class EwashingStoreBusinessController {
 	@RequestMapping(value = "/sendWashing", method = { RequestMethod.POST})
 	@ResponseBody
 	public String sendWashing(HttpServletRequest req, HttpSession session, Model model) {
-		
 		SecurityUser loginUser = (SecurityUser) req.getAttribute(Constants.CURRENT_USER);
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
@@ -968,7 +967,6 @@ public class EwashingStoreBusinessController {
 				model.addAttribute("resultMsg", "送洗衣服失败");
 				return JSONObject.toJSONString(model);
 			}
-			
 			
 			if(ids.endsWith(",")){
 				ids =ids.substring(0, ids.length()-1);
