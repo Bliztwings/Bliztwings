@@ -637,6 +637,7 @@
         c.id,
         c.order_code,
         c.bar_code,
+		o.clothes_count,
         m.name as user_name,
 		m.mobile_phone,
         d.data_name as clothes_name,

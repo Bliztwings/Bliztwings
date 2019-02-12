@@ -217,7 +217,7 @@ public class EwashingStoreBusinessController {
 				model.addAttribute("resultMsg", "条码不能为空");
 				return JSONObject.toJSONString(model);
 			}
-			
+
 			if(storeClothesVo.getSumAmount()==null || storeClothesVo.getSumAmount().compareTo(BigDecimal.ZERO)==0 || storeClothesVo.getSumAmount().compareTo(BigDecimal.ZERO)==-1){
 				model.addAttribute("resultCode", "0");
 				model.addAttribute("resultMsg", "金额不能为空");

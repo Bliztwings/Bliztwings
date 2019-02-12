@@ -74,7 +74,7 @@
 
 	// 初始化信息
 	jQuery(document).ready(function(){
-		//$("#queryKey").val("");
+		$("#queryKey").val("");
 		$("#queryKey").focus();
 	});
 	
@@ -369,7 +369,19 @@
 			return;
 		}
 
+		//$("#queryKey").val("1234567");
+
 		var params = $("#formId").serialize();
+		//var code = $("#orderCodeStr").text();
+		//console.log(code);
+
+		var code = $("#orderCodeStr").text();
+		params = "code="+code;
+		console.log(params);
+		//$("#queryKey").val("123456");
+
+		//$("#queryKey").val($("#orderCodeStr2").toString());
+		//params = "code=123";
 
         // 执行ajax
         $.ajax({
@@ -461,15 +473,19 @@
                 LODOP.SET_PRINT_STYLE("FontSize", 10);  //字体大小
                 hTop += 26;
                 hTop += rowHeight;
-                LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, "工厂店");
+                LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, "浣衣坊洗衣  共"+jsonArr[i].clothesCount+"件");
+				hTop += rowHeight;
+				LODOP.ADD_PRINT_TEXT(hTop, 26, 280, 60, "客户："+jsonArr[i].name+"("+jsonArr[i].mobilePhone+")");
+				//LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 80, jsonArr[i].name+"("+jsonArr[i].mobilePhone+")");
                 hTop += rowHeight;
-                LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, "名称："+jsonArr[i].clothesName);
+                LODOP.ADD_PRINT_TEXT(hTop, 26, 280, 60, "名称："+jsonArr[i].clothesName);
+				//LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, jsonArr[i].clothesName);
                 hTop += rowHeight;
-                LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, "品牌："+jsonArr[i].brand);
-                hTop += rowHeight;
-                LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, "客户："+jsonArr[i].name+"("+jsonArr[i].mobilePhone+")");
-                hTop += rowHeight;
-                LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, "取衣日期：2018-12-21");
+                LODOP.ADD_PRINT_TEXT(hTop, 26, 280, 60, "地址："+jsonArr[i].orderAddress);
+				//LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, jsonArr[i].orderAddress);
+
+                //hTop += rowHeight;
+                //LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, "共"+jsonArr[i].clothesCount+"件");
 
                 //设定纸张大小;
                 LODOP.SET_PRINT_PAGESIZE(1, "60mm", "41mm", "CreateCustomPage");
@@ -669,12 +685,12 @@
 				<tr>
 					<td width="10%">
 						<div class="input-group" >
-							<input id="queryKey" placeholder="输入条码" name="queryKey" value="${queryKey}" type="text" class="form-control" style="width: 150px;"> <!-- <span class="glyphicon glyphicon-star"></span> -->
+							<input id="queryKey" placeholder="输入条码" onchange="query()" name="queryKey" value="${queryKey}" type="text" class="form-control" style="width: 150px;"> <!-- <span class="glyphicon glyphicon-star"></span> -->
 						</div>
 					</td>
 					<td width="100px" align="left">
 						<div class="input-group" style="padding-left: 10px;">
-							<button class="btn btn-primary" type="button" id="transLogQueryBtn1" onclick="query()" style="margin-right: 10px;">查  询</button>
+							<button class="btn btn-primary" type="button" id="transLogQueryBtn1" onclick="query()" style="margin-right: 10px;">查  询2</button>
 							<button class="btn btn-primary" type="button" id="transLogQueryBtn2" onclick="waitingHandon()" style="margin-right: 10px;">待上挂衣物</button>
 							<button class="btn btn-primary" type="button" id="transLogQueryBtn3" onclick="PostXiYiDan()" style="margin-right: 10px;">打印洗衣单</button>
 							<button class="btn btn-primary" type="button" id="transLogQueryBtn4" onclick="PostZhanTie()" style="margin-right: 10px;">打印粘贴</button>

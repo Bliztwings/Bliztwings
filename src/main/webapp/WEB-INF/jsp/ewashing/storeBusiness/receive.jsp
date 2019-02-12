@@ -312,8 +312,9 @@
 					rowHeight=16; //行距
 
 					//条码
-					LODOP.SET_PRINT_STYLE("FontSize", 8);
-					LODOP.ADD_PRINT_BARCODE(hTop, 200, 210, 50, "128Auto", barCode);
+					LODOP.SET_PRINT_STYLE("FontSize", 12);
+					//LODOP.ADD_PRINT_BARCODE(hTop, 200, 210, 50, "128Auto", barCode);
+					LODOP.ADD_PRINT_BARCODE(hTop, 200, 210, 50, "128B", barCode);
 
 					//LODOP.SET_PRINT_STYLE("Bold",1);  //粗体
 					LODOP.SET_PRINT_STYLE("FontSize", 10);  //字体大小

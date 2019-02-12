@@ -742,7 +742,8 @@ public class EwashingFactoryBusinessController {
     //查询条码对应的订单，该订单中包含的所有衣服的信息返回
     @RequestMapping(value="/queryOrderInfo")
     @ResponseBody
-    public String queryOrderInfo(HttpServletRequest req,Model model)
+    //public String queryOrderInfo(HttpServletRequest req,Model model)
+    public String queryOrderInfo(@RequestParam(value = "code") String code,Model model)
     {
         int i = 0;
         int value = 0;
@@ -752,9 +753,12 @@ public class EwashingFactoryBusinessController {
         String status = "";
         String OrderInfo = "";
         // 条码
-        String queryKey = req.getParameter("queryKey");
+        //String queryKey = req.getParameter("queryKey");
+        String queryKey = code;
         //queryKey = "2803080";
         //queryKey = "2801176";
+
+        if(queryKey==null) return OrderInfo;
 
         value = queryKey.length();
         if(value==0) return OrderInfo;
@@ -765,13 +769,13 @@ public class EwashingFactoryBusinessController {
 
             //查询本条码的订单号
             StoreClothes clothes = new StoreClothes();
-            clothes.setBarCode(queryKey);
+            /*clothes.setBarCode(queryKey);
             List<StoreClothes> list2 = storeBusiness.findOrderCode(clothes);
             if (CollectionUtils.isEmpty(list2))
             {
                 return OrderInfo;
             }
-            queryKey = list2.get(0).getOrderCode();
+            queryKey = list2.get(0).getOrderCode();*/
 
             //查询订单下所有衣服的信息
             clothes.setOrderCode(queryKey);
