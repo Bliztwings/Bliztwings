@@ -219,12 +219,15 @@ public class EwashingStoreBusinessService{
 		EwashingStore store = loginUser.getEwashingStore();
 		// 获取会员，会员卡信息
 		MemberCard cardInfo = cardService.queryMemberByCardOrMobile(storeClothesVo.getMemberId());
-		
+
+		System.out.println("---1-------saveClothes_Service");
 		String orderId =storeClothesVo.getOrderId();
+		System.out.println("---1.1-------saveClothes_Service");
 		// 判断订单信息是否存在
 		StoreOrder storeOrder = orderDao.getStoreOrderByCode(storeClothesVo.getOrderCode());
 		if (storeOrder != null) {
 
+			System.out.println("---1.2-------saveClothes_Service");
 			BigDecimal oldAmount = storeOrder.getReceivableAmount() == null ? BigDecimal.valueOf(0)
 					: storeOrder.getReceivableAmount();
 			BigDecimal paidAmount = storeOrder.getPaidAmount() == null ? BigDecimal.valueOf(0)
@@ -237,13 +240,14 @@ public class EwashingStoreBusinessService{
 			o.setPaidAmount(paidAmount);
 			o.setReceivableAmount(oldAmount.add(storeClothesVo.getSumAmount()));
 			o.setClothesCount(oldCount + 1);
+			System.out.println("---1.3-------saveClothes_Service");
 			// 增加金额
 			int status = orderDao.updateStoreOrder(o);
 			if (status <= 0) {
 				throw new AppExection("更新订单信息失败");
 			}
 		} else {
-			
+			System.out.println("---1.4-------saveClothes_Service");
 			orderId =UUID.getUUID32();
 			// 记录订单信息
 			StoreOrder order = new StoreOrder();
@@ -263,11 +267,13 @@ public class EwashingStoreBusinessService{
 			order.setOrderType("0");
 			order.setReceivableAmount(storeClothesVo.getSumAmount());
 			order.setPaidAmount(BigDecimal.ZERO);
+			System.out.println("---1.5-------saveClothes_Service");
 			if(store!=null){
 				order.setStoreId(store.getId());
 				order.setStoreName(store.getStoreName());
 			}
-			
+
+			System.out.println("---2-------saveClothes_Service");
 			// 设置默认坐标
 			double longitude =order.getLongitude()==null ? 1 : order.getLongitude();
 			double latitude =order.getLatitude()==null ? 2 : order.getLatitude();
@@ -283,7 +289,8 @@ public class EwashingStoreBusinessService{
 				throw new AppExection("生成订单失败");
 			}
 		}
-		
+
+		System.out.println("---3-------saveClothes_Service");
 		// 保存衣服信息
 		StoreClothes clothes = new StoreClothes();
 		clothes.setId(UUID.getUUID32());
@@ -313,11 +320,13 @@ public class EwashingStoreBusinessService{
 		clothes.setStatus("0");
 		clothes.setOrderCode(storeClothesVo.getOrderCode());
 		clothes.setBarCodeAuto(storeClothesVo.getBarCodeAuto());
+		System.out.println("---4-------saveClothes_Service");
 		int count = clothesDao.insert(clothes);
 		if (count <= 0) {
 			throw new AppExection("收取衣服失败");
 		}
-		
+
+		System.out.println("---5-------saveClothes_Service");
 		if(!StringUtils.isEmpty(storeClothesVo.getImagePath())){
 			// 记录衣服拍照信息
 			String fileName =String.valueOf(new Date().getTime());
@@ -338,7 +347,8 @@ public class EwashingStoreBusinessService{
 				throw new AppExection("记录衣服照片失败");
 			}
 		}
-		
+
+		System.out.println("---6-------saveClothes_Service");
 		// 记录衣服附件信息
 		String attachs = storeClothesVo.getAttachList();
 		JSONArray attachArrays = JSONArray.parseArray(attachs);
@@ -367,6 +377,7 @@ public class EwashingStoreBusinessService{
 				}
 			}
 		}
+		System.out.println("---7-------saveClothes_Service");
 		// 记录衣服流水日志
 		int clothesCount =clothesFlowService.insertClothesFlow(clothes.getOrderId(),clothes.getId(),loginUser,"0");
 		if(clothesCount<=0){

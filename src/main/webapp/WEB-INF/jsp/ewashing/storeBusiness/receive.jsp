@@ -274,14 +274,22 @@
 						//指定打印设备
 						LODOP.SET_PRINTER_INDEX(i);
 						print = 1;
-						//alert(strPName+"----"+i);
+						break;
+					}
+
+					if( strPName.indexOf("Gprinter S-4252")!=-1 )
+					{
+						//指定打印设备
+						LODOP.SET_PRINTER_INDEX(i);
+						print = 1;
+						break;
 					}
 				}
 
 				if(print!=1)
 				{
-					//alert("没有找到打印机");
-					//return;
+					alert("没有找到打印机");
+					return;
 				}
 
 				for(i =0 ;i < jsonObj.length;i++)
@@ -309,7 +317,7 @@
 					}
 
 					hTop=10;
-					rowHeight=16; //行距
+					rowHeight=12; //行距
 
 					//条码
 					LODOP.SET_PRINT_STYLE("FontSize", 12);
@@ -317,7 +325,7 @@
 					LODOP.ADD_PRINT_BARCODE(hTop, 200, 210, 50, "128B", barCode);
 
 					//LODOP.SET_PRINT_STYLE("Bold",1);  //粗体
-					LODOP.SET_PRINT_STYLE("FontSize", 10);  //字体大小
+					LODOP.SET_PRINT_STYLE("FontSize", 8);  //字体大小
 					LODOP.ADD_PRINT_TEXT(hTop, 6, 200, 60, "浣衣坊洗衣");
 					hTop += rowHeight;
 					//LODOP.ADD_PRINT_TEXT(hTop,6,400,60,"客户："+userName+"("+mobilePhone.substr(0,3)+"****"+mobilePhone.substr(7,4)+")");
@@ -329,11 +337,11 @@
 					hTop += rowHeight;
 					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "颜色：" + color);
 					//LODOP.ADD_PRINT_TEXT(hTop, 230, 400, 60, "取衣日期：" + takingDate);
-					hTop += rowHeight;
-					LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "地址：" + address);
+					//hTop += rowHeight;
+					//LODOP.ADD_PRINT_TEXT(hTop, 6, 400, 60, "地址：" + address);
 
 					//设定纸张大小;
-					LODOP.SET_PRINT_PAGESIZE(1, "110mm", "40mm", "CreateCustomPage");
+					LODOP.SET_PRINT_PAGESIZE(1, "110mm", "18mm", "CreateCustomPage");
 
 					//设计
 					//LODOP.PRINT_DESIGN();

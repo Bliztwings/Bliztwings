@@ -173,7 +173,8 @@
 						var price="";
 						for(var j=0;j<array.length;j++){
 							var dataName=array[j].dataName;
-							if(tabNo=='1'){
+							if(tabNo=='1')
+							{
 								if(serviceType=='1'){
 									price=array[j].price;
 								}
@@ -190,11 +191,20 @@
 								else{
 									tableStr.append('<div id="'+array[j].id+'" class="onmouseOver" onclick="selectBox(\''+array[j].dataName+'\',\''+array[j].id+'\',\''+array[j].price+'\',\''+array[j].commonPrice+'\',\''+array[j].luxuriesPrice+'\',this)" style="border: 1px solid;border-color:#d3d3d3;width: 100px;height: 100px;text-align: center;vertical-align: middle;cursor: pointer;float: left; margin-top: 5px;line-height: 100px;  margin-left: 8px;">'+dataName+'<font color="red">('+price+')</font>'+'</div>');
 								}
-								//var  url="http://ouanv8ds6.bkt.clouddn.com/ewashing/"+array[j].imagePath;
-								//alert(url);
-								//tableStr.append("<div style='border: 1px solid;border-color:#d3d3d3;width: 200px;height: 200px;text-align: center;vertical-align: middle;cursor: pointer;float: left; margin-top: 5px;line-height: 200px;  margin-left: 8px;'><div><img style='width:50px;height:50px;' src='"+url+"'/></div><div style='margin-top: 130px;position: relative;'>"+array[j].dataName+"</div><div style='margin-top: 130px;position: relative;'>"+price+"</div></div>");
-								
-							}else{
+							}
+                            else if(tabNo=='2')
+                            {
+                                console.log("--dataName----"+dataName);
+                                if(jmz.GetLength(dataName)>6){
+                                    dataName ="<div style='padding-top: 10px;' ><p>"+dataName.substring(0,6)+"</p><p>"+dataName.substring(6,jmz.GetLength(dataName))+"</p></div>";
+                                    tableStr.append('<div id="'+array[j].id+'"  class="onmouseOver" onclick="selectBox(\''+array[j].dataName+'\',\''+array[j].id+'\',\''+array[j].price+'\',\''+array[j].commonPrice+'\',\''+array[j].luxuriesPrice+'\',this)" style="border: 1px solid;border-color:#d3d3d3;width: 100px;height: 50px;text-align: center;vertical-align: middle;cursor: pointer;float: left; margin-top: 5px;  margin-left: 8px;font-size:18px">'+dataName+'</div>');
+                                }else{
+                                    var bjColor="#C8EBFA";
+                                    tableStr.append('<div id="'+array[j].id+'"   class="onmouseOver" onclick="selectBox(\''+array[j].dataName+'\',\''+array[j].id+'\',\''+array[j].price+'\',\''+array[j].commonPrice+'\',\''+array[j].luxuriesPrice+'\',this)" style="background-color:'+bjColor+';border: 1px solid;border-color:#d3d3d3;width: 100px;height: 50px;text-align: center;vertical-align: middle;line-height: 50px;cursor: pointer;float: left; margin-top: 5px;  margin-left: 8px;font-size:18px">'+dataName+'</div>');
+                                }
+                            }
+							else
+							{
 								if(jmz.GetLength(dataName)>6){
 									dataName ="<div style='padding-top: 30px;' ><p>"+dataName.substring(0,6)+"</p><p>"+dataName.substring(6,jmz.GetLength(dataName))+"</p></div>";
 									tableStr.append('<div id="'+array[j].id+'"  class="onmouseOver" onclick="selectBox(\''+array[j].dataName+'\',\''+array[j].id+'\',\''+array[j].price+'\',\''+array[j].commonPrice+'\',\''+array[j].luxuriesPrice+'\',this)" style="border: 1px solid;border-color:#d3d3d3;width: 100px;height: 100px;text-align: center;vertical-align: middle;cursor: pointer;float: left; margin-top: 5px;  margin-left: 8px;">'+dataName+'</div>');

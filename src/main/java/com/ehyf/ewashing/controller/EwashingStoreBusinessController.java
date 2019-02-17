@@ -180,12 +180,14 @@ public class EwashingStoreBusinessController {
 				return objectMapper.writeValueAsString(model);
 			}
 			else{
+				System.out.println("---code=0---1----saveClothes");
 				model.addAttribute("resultCode", "0");
 				model.addAttribute("resultMsg", "收衣失败");
 				return JSONObject.toJSONString(model);
 			}
 			
 		} catch (Exception e) {
+			System.out.println("---code=0---2----saveClothes");
 			model.addAttribute("resultCode", "0");
 			model.addAttribute("resultMsg", e.getMessage());
 			return JSONObject.toJSONString(model);
