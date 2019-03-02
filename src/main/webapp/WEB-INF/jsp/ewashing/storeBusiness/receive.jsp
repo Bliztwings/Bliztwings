@@ -325,7 +325,7 @@
 					LODOP.ADD_PRINT_BARCODE(hTop, 200, 210, 50, "128B", barCode);
 
 					//LODOP.SET_PRINT_STYLE("Bold",1);  //粗体
-					LODOP.SET_PRINT_STYLE("FontSize", 8);  //字体大小
+					LODOP.SET_PRINT_STYLE("FontSize", 7);  //字体大小
 					LODOP.ADD_PRINT_TEXT(hTop, 6, 200, 60, "浣衣坊洗衣");
 					hTop += rowHeight;
 					//LODOP.ADD_PRINT_TEXT(hTop,6,400,60,"客户："+userName+"("+mobilePhone.substr(0,3)+"****"+mobilePhone.substr(7,4)+")");

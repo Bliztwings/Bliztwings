@@ -652,7 +652,7 @@
         c.store_id,
         s.store_name,
 		s.telephone,
-        o.order_address,
+		m.address as order_address,
 		o.leave_message as leaveDateStr
 		from store_clothes c
         LEFT JOIN store s on c.store_id =s.id

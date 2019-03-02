@@ -369,19 +369,51 @@
 			return;
 		}
 
-		//$("#queryKey").val("1234567");
+		//==========================
+		//打印初始化
+		/*LODOP.PRINT_INIT("打印控件功能演示");
 
+		//获得打印设备个数
+		var iCount=LODOP.GET_PRINTER_COUNT();
+		console.log("---count="+iCount+"----");
+
+		//指定打印设备
+		var is_print = 0;
+		var strPName;
+		for(i=0;i<iCount;i++)
+		{
+			strPName = LODOP.GET_PRINTER_NAME(i);
+			console.log("---name="+strPName+"--i="+i+"-----111");
+			if( strPName.indexOf("GP-3120TU")!=-1 )
+			{
+				//指定打印设备
+				LODOP.SET_PRINTER_INDEX(i);
+				is_print = 1;
+				console.log("---get-print-3120-----");
+				break;
+			}
+			if( strPName.indexOf("Gprinter GP-1424")!=-1 )
+			{
+				//指定打印设备
+				LODOP.SET_PRINTER_INDEX(i);
+				is_print = 1;
+				console.log("---get-print-1424-----");
+				break;
+			}
+		}
+
+		if(is_print!=1)
+		{
+			alert("没有找到打印机,代码1015");
+			return;
+		}*/
+
+		//==========================
 		var params = $("#formId").serialize();
-		//var code = $("#orderCodeStr").text();
-		//console.log(code);
 
 		var code = $("#orderCodeStr").text();
 		params = "code="+code;
 		console.log(params);
-		//$("#queryKey").val("123456");
-
-		//$("#queryKey").val($("#orderCodeStr2").toString());
-		//params = "code=123";
 
         // 执行ajax
         $.ajax({
@@ -409,6 +441,7 @@
     {
         var i = 0;
         var len = 0;
+        var is_print = 0;
         var jsonStr = data;
 
         len = jsonStr.length;
@@ -442,19 +475,35 @@
 
             //获得打印设备个数
             var iCount=LODOP.GET_PRINTER_COUNT();
+			console.log("---count="+iCount+"----");
 
             //指定打印设备
             var strPName;
             for(i=0;i<iCount;i++)
             {
                 strPName = LODOP.GET_PRINTER_NAME(i);
-                if( strPName.indexOf("Gprinter GP-3120TU")!=-1 )
+				console.log("---name="+strPName+"--i="+i+"-----");
+                if( strPName.indexOf("GP-3120TU")!=-1 )
                 {
                     //指定打印设备
                     LODOP.SET_PRINTER_INDEX(i);
-                    //alert("Gprinter----"+i);
+					is_print = 1;
+					break;
                 }
+				if( strPName.indexOf("Gprinter GP-1424")!=-1 )
+				{
+					//指定打印设备
+					LODOP.SET_PRINTER_INDEX(i);
+					is_print = 1;
+					break;
+				}
             }
+
+			if(is_print!=1)
+			{
+				alert("没有找到打印机,代码1015");
+				return;
+			}
 
             var jsonArr = [];
             //i=0;
@@ -481,7 +530,7 @@
                 LODOP.ADD_PRINT_TEXT(hTop, 26, 280, 60, "名称："+jsonArr[i].clothesName);
 				//LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, jsonArr[i].clothesName);
                 hTop += rowHeight;
-                LODOP.ADD_PRINT_TEXT(hTop, 26, 280, 60, "地址："+jsonArr[i].orderAddress);
+                LODOP.ADD_PRINT_TEXT(hTop, 26, 210, 60, "地址："+jsonArr[i].orderAddress);
 				//LODOP.ADD_PRINT_TEXT(hTop, 26, 200, 60, jsonArr[i].orderAddress);
 
                 //hTop += rowHeight;
@@ -690,7 +739,7 @@
 					</td>
 					<td width="100px" align="left">
 						<div class="input-group" style="padding-left: 10px;">
-							<button class="btn btn-primary" type="button" id="transLogQueryBtn1" onclick="query()" style="margin-right: 10px;">查  询2</button>
+							<button class="btn btn-primary" type="button" id="transLogQueryBtn1" onclick="query()" style="margin-right: 10px;">查  询</button>
 							<button class="btn btn-primary" type="button" id="transLogQueryBtn2" onclick="waitingHandon()" style="margin-right: 10px;">待上挂衣物</button>
 							<button class="btn btn-primary" type="button" id="transLogQueryBtn3" onclick="PostXiYiDan()" style="margin-right: 10px;">打印洗衣单</button>
 							<button class="btn btn-primary" type="button" id="transLogQueryBtn4" onclick="PostZhanTie()" style="margin-right: 10px;">打印粘贴</button>
